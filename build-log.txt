@@ -1,0 +1,6 @@
+  • electron-builder  version=24.13.3 os=10.0.19045
+  • loaded configuration  file=package.json ("build" field)
+  • rebuilding native dependencies  dependencies=bcrypt@5.1.1 platform=win32 arch=x64
+  • packaging       platform=win32 arch=x64 electron=28.3.3 appOutDir=dist\win-unpacked
+  • building        target=nsis file=dist\TechBrowser02 Setup 2.1.0.exe archs=x64 oneClick=false perMachine=false
+  • building block map  blockMapFile=dist\TechBrowser02 Setup 2.1.0.exe.blockmap

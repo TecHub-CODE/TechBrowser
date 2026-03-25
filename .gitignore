@@ -1,0 +1,38 @@
+# ══════════════════════════════════════════
+#  TechBrowser02 — .gitignore
+# ══════════════════════════════════════════
+
+# 🔒 Hassas dosyalar — ASLA commit etme
+.env
+*.env
+
+# Kullanıcı verileri — local'de kalır
+techbrowser-users.json
+techbrowser-data.json
+techbrowser-otp.json
+techbrowser-settings.json
+
+# Build çıktıları
+dist/
+out/
+release/
+
+# Node
+node_modules/
+
+# Electron builder cache
+.electron-builder-cache/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.env 
