@@ -34,6 +34,17 @@ try {
     configurable: true
   });
 
+  // Konum izni popup'ını engelle — her zaman reddedilmiş gibi davran
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition = function(success, error) {
+      if (error) error({ code: 1, message: 'Konum erişimi reddedildi.' });
+    };
+    navigator.geolocation.watchPosition = function(success, error) {
+      if (error) error({ code: 1, message: 'Konum erişimi reddedildi.' });
+      return 0;
+    };
+  }
+
   // Electron izlerini sil
   delete window.process;
   delete window.require;

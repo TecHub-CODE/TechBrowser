@@ -24,23 +24,8 @@
 [data-theme="rose"]{--bg:#0e070d;--sf:#160e15;--sf2:#20141f;--sf3:#2c1b2b;--tx:#f0dce8;--tx2:#6b4060;--ac:#f472b6;--ac2:#ec4899;--ac-g:linear-gradient(135deg,#f472b6,#e879f9);}
 [data-theme="light"]{--bg:#f0f0f5;--sf:#ffffff;--sf2:#e8e8f0;--sf3:#dcdce8;--bd:rgba(0,0,0,.08);--bd2:rgba(0,0,0,.12);--tx:#0a0a14;--tx2:#555566;--tx3:#aaaacc;--glass:rgba(255,255,255,.9);}
 
-/* ── BAYRAM TEMALARı ── */
-[data-theme="cumhuriyet"]{--bg:#0a0000;--sf:#150000;--sf2:#1f0000;--sf3:#2a0000;--tx:#ffdddd;--tx2:#cc5555;--ac:#e63946;--ac2:#c1121f;--ac-g:linear-gradient(135deg,#e63946,#c1121f);}
-[data-theme="ramazan"]{--bg:#05080a;--sf:#0a1118;--sf2:#101b25;--sf3:#172533;--tx:#fdf0c8;--tx2:#8a7040;--ac:#f5c842;--ac2:#d4a017;--ac-g:linear-gradient(135deg,#f5c842,#d4a017);}
-[data-theme="kurban"]{--bg:#060a05;--sf:#0d1409;--sf2:#141f0e;--sf3:#1b2a13;--tx:#dff5cc;--tx2:#5a8a40;--ac:#6abf4b;--ac2:#4a9630;--ac-g:linear-gradient(135deg,#6abf4b,#4a9630);}
-[data-theme="nevruz"]{--bg:#06050a;--sf:#100d18;--sf2:#181525;--sf3:#221d33;--tx:#f0e8ff;--tx2:#7a60aa;--ac:#a855f7;--ac2:#7c3aed;--ac-g:linear-gradient(135deg,#a855f7,#f59e0b);}
-[data-theme="kadir"]{--bg:#020408;--sf:#05091a;--sf2:#080e28;--sf3:#0b1336;--tx:#e8f0ff;--tx2:#4060aa;--ac:#7eb3ff;--ac2:#4f8cff;--ac-g:linear-gradient(135deg,#c084fc,#7eb3ff);}
-[data-theme="mevlid"]{--bg:#080605;--sf:#130f0a;--sf2:#1e180f;--sf3:#2a2114;--tx:#faecd8;--tx2:#8a6a3a;--ac:#d4956a;--ac2:#b06a3a;--ac-g:linear-gradient(135deg,#d4956a,#f5c842);}
-[data-theme="kadinlar"]{--bg:#0d050a;--sf:#180a12;--sf2:#22101c;--sf3:#2e1626;--tx:#ffe8f5;--tx2:#aa5080;--ac:#f9a8d4;--ac2:#ec4899;--ac-g:linear-gradient(135deg,#f9a8d4,#c084fc);}
-[data-theme="iscibayram"]{--bg:#050a05;--sf:#0a140a;--sf2:#0f1e0f;--sf3:#142814;--tx:#e8fce8;--tx2:#4a844a;--ac:#4ade80;--ac2:#16a34a;--ac-g:linear-gradient(135deg,#4ade80,#facc15);}
-[data-theme="23nisan"]{--bg:#020a05;--sf:#051410;--sf2:#081e18;--sf3:#0c2a22;--tx:#ccffee;--tx2:#3a8a6a;--ac:#34d399;--ac2:#059669;--ac-g:linear-gradient(135deg,#34d399,#38bdf8);}
-[data-theme="19mayis"]{--bg:#050a00;--sf:#0a1400;--sf2:#0f1e00;--sf3:#152800;--tx:#eeffcc;--tx2:#6a8a3a;--ac:#a3e635;--ac2:#65a30d;--ac-g:linear-gradient(135deg,#a3e635,#facc15);}
-[data-theme="30agustos"]{--bg:#0a0000;--sf:#150000;--sf2:#1f0000;--sf3:#2a0000;--tx:#ffe8e8;--tx2:#cc5555;--ac:#e63946;--ac2:#c1121f;--ac-g:linear-gradient(135deg,#e63946,#c1121f);}
 
 /* Animasyon parçacıkları */
-#holiday-canvas{position:fixed;inset:0;pointer-events:none;z-index:99998;opacity:0;transition:opacity 1s ease;}
-#holiday-banner{position:fixed;top:48px;left:50%;transform:translateX(-50%) translateY(-80px);z-index:99997;background:var(--ac-g);border-radius:16px;padding:12px 28px;color:#fff;font-size:14px;font-weight:700;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.5);opacity:0;transition:all .8s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;}
-#holiday-banner.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 html,body{height:100%;overflow:hidden;}
 body{font-family:'Space Grotesk',-apple-system,sans-serif;background:var(--bg);color:var(--tx);display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;user-select:none;transition:background-color .6s ease,color .5s ease,filter .5s ease;}
@@ -428,13 +413,25 @@ body.game-mode .game-hud{display:block;}
 .ram-alloc{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ac);}
 
 /* Downloads */
-.dl-row{background:var(--sf2);border-radius:10px;padding:11px 13px;margin-bottom:6px;}
-.dl-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.dl-nm{flex:1;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.dl-sz{font-size:10.5px;color:var(--tx2);flex-shrink:0;}
-.dl-bar{height:4px;background:var(--sf3);border-radius:2px;overflow:hidden;margin-bottom:4px;}
+.dl-row{background:var(--sf2);border-radius:10px;padding:11px 13px;margin-bottom:6px;border:1px solid transparent;transition:border-color .2s;}
+.dl-row:hover{border-color:var(--bd);}
+.dl-top{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.dl-ic{font-size:18px;flex-shrink:0;}
+.dl-info{flex:1;min-width:0;}
+.dl-nm{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tx);}
+.dl-sz{font-size:10.5px;color:var(--tx2);margin-top:1px;}
+.dl-bar{height:4px;background:var(--sf3);border-radius:2px;overflow:hidden;margin-bottom:6px;}
 .dl-fill{height:100%;background:var(--ac);border-radius:2px;transition:width .3s ease;}
-.dl-hint{font-size:10.5px;color:var(--tx2);}
+.dl-fill.done{background:var(--gn);}
+.dl-fill.err{background:var(--rd);}
+.dl-actions{display:flex;gap:5px;flex-wrap:wrap;}
+.dl-btn{height:24px;padding:0 9px;border-radius:6px;border:1px solid var(--bd);background:transparent;font-size:10.5px;font-weight:600;color:var(--tx2);cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:all .15s;white-space:nowrap;}
+.dl-btn:hover{background:var(--sf3);color:var(--tx);border-color:var(--bd2);}
+.dl-btn.primary{background:rgba(79,140,255,.12);color:var(--ac);border-color:rgba(79,140,255,.3);}
+.dl-btn.primary:hover{background:rgba(79,140,255,.22);}
+.dl-btn.danger{color:var(--rd);}
+.dl-btn.danger:hover{background:rgba(255,95,87,.08);}
+.dl-speed{font-size:10px;color:var(--tx2);font-family:'JetBrains Mono',monospace;}
 
 /* Extensions */
 .ext-row{display:flex;align-items:center;gap:10px;padding:8px;border-radius:9px;margin-bottom:3px;transition:background .12s;}
@@ -604,7 +601,6 @@ body.game-mode .game-hud{display:block;}
 .ai-welcome p{font-size:12px;line-height:1.6;}
 .ai-key-hint{font-size:10.5px;color:var(--tx3,var(--tx2));text-align:center;padding:6px 14px;opacity:.7;}
 
-[data-theme="30agustos"] body::before{
   content:'';
   position:fixed;
   inset:0;
@@ -616,12 +612,18 @@ body.game-mode .game-hud{display:block;}
   z-index:0;
   pointer-events:none;
 }
-[data-theme="30agustos"] #app{position:relative;z-index:1;}
 </style>
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<!-- Firebase SDK — güvenli yükleme -->
 <script>
+// Firebase yüklenemezse global stub oluştur
+window._firebaseLoadError = false;
+</script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js" onerror="window._firebaseLoadError=true;window.firebase={initializeApp:function(){},auth:function(){return{languageCode:'tr',onAuthStateChanged:function(){},signOut:function(){},signInWithEmailAndPassword:function(){return Promise.reject({code:'unavailable'})},createUserWithEmailAndPassword:function(){return Promise.reject({code:'unavailable'})},signInWithCredential:function(){return Promise.reject({code:'unavailable'})},GoogleAuthProvider:{credential:function(){}}};},GoogleAuthProvider:{credential:function(){}}}"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js" onerror=""></script>
+<script>
+if(!window.firebase||window._firebaseLoadError){
+  window.firebase={initializeApp:function(){},auth:function(){return{languageCode:'tr',onAuthStateChanged:function(cb){},signOut:function(){return Promise.resolve();},signInWithEmailAndPassword:function(){return Promise.reject({code:'auth/network-request-failed'});},createUserWithEmailAndPassword:function(){return Promise.reject({code:'auth/network-request-failed'});},signInWithCredential:function(){return Promise.reject({code:'auth/network-request-failed'});}};}};
+}
 firebase.initializeApp({
   apiKey:"AIzaSyCZ2u0VEot46d1LzyTYmEX8GO-HWuDCp6w",
   authDomain:"techbrowser02.firebaseapp.com",
@@ -646,8 +648,6 @@ _fbAuth.onAuthStateChanged(function(user){
 </script>
 </head>
 <body data-theme="default">
-<canvas id="holiday-canvas"></canvas>
-<div id="holiday-banner"></div>
 
 <!-- ══ KULLANICI SÖZLEŞMESİ OVERLAY ══ -->
 <div id="termsOverlay">
@@ -1190,17 +1190,6 @@ var THEMES={
   stone:{name:'Taş',bg:'#080807',s:'#111110',ac:'#d97706',r:'#f87171',g:'#84cc16'},
   rose:{name:'Gül Pembesi',bg:'#0e070d',s:'#160e15',ac:'#f472b6',r:'#fb923c',g:'#34d399'},
   light:{name:'Açık',bg:'#f0f0f5',s:'#ffffff',ac:'#4f8cff',r:'#dc2626',g:'#16a34a'},
-  cumhuriyet:{name:'Cumhuriyet Bayramı',bg:'#0a0000',s:'#150000',ac:'#e63946',r:'#e63946',g:'#ffffff',holiday:true,emoji:'🇹🇷',msg:'29 Ekim Cumhuriyet Bayramınız Kutlu Olsun!',particles:'confetti-red'},
-  ramazan:{name:'Ramazan Bayramı',bg:'#05080a',s:'#0a1118',ac:'#f5c842',r:'#f5c842',g:'#4ade80',holiday:true,emoji:'🌙',msg:'Ramazan Bayramınız Mübarek Olsun!',particles:'stars-gold'},
-  kurban:{name:'Kurban Bayramı',bg:'#060a05',s:'#0d1409',ac:'#6abf4b',r:'#f5c842',g:'#6abf4b',holiday:true,emoji:'🌿',msg:'Kurban Bayramınız Mübarek Olsun!',particles:'stars-green'},
-  nevruz:{name:'Nevruz',bg:'#06050a',s:'#100d18',ac:'#a855f7',r:'#f59e0b',g:'#a855f7',holiday:true,emoji:'🌸',msg:'Nevruz Bayramınız Kutlu Olsun!',particles:'confetti-color'},
-  kadir:{name:'Kadir Gecesi',bg:'#020408',s:'#05091a',ac:'#7eb3ff',r:'#c084fc',g:'#7eb3ff',holiday:true,emoji:'✨',msg:'Kadir Geceniz Mübarek Olsun!',particles:'stars-blue'},
-  mevlid:{name:'Mevlid Kandili',bg:'#080605',s:'#130f0a',ac:'#d4956a',r:'#f5c842',g:'#d4956a',holiday:true,emoji:'☪️',msg:"Mevlid Kandili'niz Mübarek Olsun!",particles:'stars-gold'},
-  kadinlar:{name:'Kadınlar Günü',bg:'#0d050a',s:'#180a12',ac:'#f9a8d4',r:'#f9a8d4',g:'#c084fc',holiday:true,emoji:'💐',msg:'8 Mart Dünya Kadınlar Günü Kutlu Olsun!',particles:'confetti-pink'},
-  iscibayram:{name:'İşçi Bayramı',bg:'#050a05',s:'#0a140a',ac:'#4ade80',r:'#facc15',g:'#4ade80',holiday:true,emoji:'✊',msg:'1 Mayıs İşçi Bayramı Kutlu Olsun!',particles:'confetti-red'},
-  n23nisan:{name:'23 Nisan',bg:'#020a05',s:'#051410',ac:'#34d399',r:'#38bdf8',g:'#34d399',holiday:true,emoji:'🎈',msg:'23 Nisan Ulusal Egemenlik ve Çocuk Bayramı Kutlu Olsun!',particles:'confetti-color'},
-  n19mayis:{name:'19 Mayıs',bg:'#050a00',s:'#0a1400',ac:'#a3e635',r:'#facc15',g:'#a3e635',holiday:true,emoji:'⚽',msg:"19 Mayıs Atatürk'ü Anma, Gençlik ve Spor Bayramı Kutlu Olsun!",particles:'confetti-green'},
-  n30agustos:{name:'30 Ağustos',bg:'#0a0000',s:'#150000',ac:'#e63946',r:'#c1121f',g:'#e63946',holiday:true,emoji:'',msg:'30 Ağustos Zafer Bayramı Kutlu Olsun!',particles:'confetti-red'}
 };
 var EXT_STORE=[
   {id:'adblock',ic:'🛡',name:'AdShield Pro',cat:'Gizlilik',desc:'Reklamları engeller.',key:'adBlock'},
@@ -1309,8 +1298,27 @@ async function init(){
   updateSeBadge();
   updateAccountUI();
 
+  window.electronAPI.onDownloadStarted&&window.electronAPI.onDownloadStarted(function(info){
+    addDownload({filename:info.filename,received:0,total:info.totalBytes||0,state:'downloading'});
+    if(curPanel==='downloads')renderDownloads();
+    // Bildirim toast
+    toast('⬇️ İndiriliyor: '+info.filename);
+  });
+
   window.electronAPI.onDownloadProgress&&window.electronAPI.onDownloadProgress(function(info){
-    addDownload(info);
+    addDownload({filename:info.filename,received:info.receivedBytes||0,total:info.totalBytes||0,state:'downloading'});
+    if(curPanel==='downloads')renderDownloads();
+  });
+
+  window.electronAPI.onDownloadDone&&window.electronAPI.onDownloadDone(function(info){
+    var st=(info.state==='completed')?'completed':'interrupted';
+    addDownload({filename:info.filename,received:info.totalBytes||0,total:info.totalBytes||0,state:st,savePath:info.savePath});
+    if(curPanel==='downloads')renderDownloads();
+    if(st==='completed'){
+      toast('✅ İndirildi: '+info.filename);
+    } else {
+      toast('❌ İndirme hatası: '+info.filename);
+    }
   });
 
   // RAM / Clock loop
@@ -1665,10 +1673,12 @@ function createWebview(tabId, url){
   wv.src=url;wv.id='wv-'+tabId;
   wv.setAttribute('allowpopups','');
   wv.setAttribute('webpreferences','contextIsolation=false, javascript=true');
-  // Yandex için özel UA ve partition
+  // Webview UA ve partition
   if(url && url.includes('yandex')){
     wv.setAttribute('partition','persist:yandex');
-    wv.setAttribute('useragent','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 YaBrowser/24.1.0.0 Yowser/2.5');
+    // Standart Chrome UA — Yandex Browser UA konum izni popup'ına neden oluyor
+    wv.setAttribute('useragent','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
+    wv.setAttribute('preload','../../webview-preload.js');
   } else if(url && (url.includes('google.com') || url.includes('youtube.com') || url.includes('gmail.com') || url.includes('googleapis.com'))){
     wv.setAttribute('partition','persist:google');
     wv.setAttribute('useragent','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
@@ -1677,7 +1687,8 @@ function createWebview(tabId, url){
     wv.setAttribute('useragent','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
     wv.setAttribute('preload','../../webview-preload.js');
   }
-  wv.style.cssText='width:100%;height:100%;border:none;display:flex;flex:1;';
+  // Beyaz arka plan engeli — webview yüklenene kadar koyu arka plan
+  wv.style.cssText='width:100%;height:100%;border:none;display:flex;flex:1;background:#0a0a0f;';
   container.appendChild(lo);container.appendChild(ep);container.appendChild(wv);
   document.getElementById('wvContainers').appendChild(container);
   tabData[tabId].wv=wv;tabData[tabId].container=container;
@@ -2155,33 +2166,133 @@ function renderHistory(){
 function clearHist(){hist=[];saveAllData();toast('Geçmiş temizlendi');renderHistory();}
 
 var _dlList=[];
+var _dlSpeeds={};
+
 function addDownload(info){
-  var idx=_dlList.findIndex(d=>d.filename===info.filename);
-  if(idx>=0)_dlList[idx]=info;else _dlList.unshift(info);
+  var idx=_dlList.findIndex(function(d){return d.filename===info.filename;});
+  if(idx>=0){
+    if(info.state==='downloading' && _dlList[idx].received && info.received){
+      var diff=info.received-_dlList[idx].received;
+      if(diff>0) _dlSpeeds[info.filename]=diff;
+    }
+    _dlList[idx]=info;
+  } else {
+    _dlList.unshift(info);
+  }
   if(curPanel==='downloads')renderDownloads();
 }
-function renderDownloads(){
-  var act=_dlList.filter(d=>d.state==='downloading');
-  var done=_dlList.filter(d=>d.state!=='downloading');
-  var html='';
-  if(act.length){
-    html+='<div class="spsec">AKTİF</div>';
-    act.forEach(d=>{
-      var pct=d.total>0?Math.round(d.received/d.total*100):0;
-      html+='<div class="dl-row"><div class="dl-top"><span style="font-size:15px">📦</span><span class="dl-nm">'+d.filename+'</span><span class="dl-sz">'+(d.total>0?Math.round(d.total/1024/1024)+' MB':'')+'</span></div><div class="dl-bar"><div class="dl-fill" style="width:'+pct+'%"></div></div><div class="dl-hint">'+pct+'% indirildi</div></div>';
-    });
-  }
-  if(done.length){
-    html+='<div class="spsec">TAMAMLANDI</div>';
-    done.forEach(d=>{
-      var ok=d.state==='completed';
-      html+='<div class="dl-row"><div class="dl-top"><span style="font-size:15px">📄</span><span class="dl-nm">'+d.filename+'</span></div><div class="dl-bar"><div class="dl-fill" style="width:100%;background:'+(ok?'var(--gn)':'var(--rd)')+'"></div></div><div class="dl-hint" style="color:'+(ok?'var(--gn)':'var(--rd)')+';">'+(ok?'✓ Tamamlandı':'✗ Hata')+'</div></div>';
-    });
-  }
-  if(!html)html='<div style="padding:24px;text-align:center;color:var(--tx2);font-size:12px;">Henüz indirme yok</div>';
-  document.getElementById('spBody').innerHTML=html;
+
+function cancelDownload(fn){
+  var idx=_dlList.findIndex(function(d){return d.filename===fn;});
+  if(idx>=0){_dlList[idx].state='interrupted';delete _dlSpeeds[fn];}
+  if(curPanel==='downloads')renderDownloads();
+  toast('İndirme iptal edildi');
 }
 
+function removeDownload(fn){
+  _dlList=_dlList.filter(function(d){return d.filename!==fn;});
+  delete _dlSpeeds[fn];
+  if(curPanel==='downloads')renderDownloads();
+}
+
+function clearAllDownloads(){
+  _dlList=_dlList.filter(function(d){return d.state==='downloading';});
+  _dlSpeeds={};
+  if(curPanel==='downloads')renderDownloads();
+  toast('Liste temizlendi');
+}
+
+function fmtBytes(b){
+  if(!b||b===0)return '0 B';
+  if(b<1024)return b+' B';
+  if(b<1048576)return (b/1024).toFixed(1)+' KB';
+  if(b<1073741824)return (b/1048576).toFixed(1)+' MB';
+  return (b/1073741824).toFixed(2)+' GB';
+}
+
+function renderDownloads(){
+  var act=_dlList.filter(function(d){return d.state==='downloading';});
+  var done=_dlList.filter(function(d){return d.state==='completed';});
+  var err=_dlList.filter(function(d){return d.state==='interrupted';});
+  var html='';
+
+  if(_dlList.length>0){
+    html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">'
+      +'<span style="font-size:11px;color:var(--tx2);">'+_dlList.length+' öğe</span>'
+      +'<div style="display:flex;gap:6px;">'
+      +'<button class="dl-btn" onclick="if(window.electronAPI&&window.electronAPI.openDownloadsFolder)window.electronAPI.openDownloadsFolder()">📁 Klasörü Aç</button>'
+      +'<button class="dl-btn danger" onclick="clearAllDownloads()">🗑 Temizle</button>'
+      +'</div></div>';
+  }
+
+  if(act.length){
+    html+='<div class="spsec">İNDİRİLİYOR ('+act.length+')</div>';
+    act.forEach(function(d){
+      var pct=d.total>0?Math.round(d.received/d.total*100):0;
+      var spd=_dlSpeeds[d.filename]?fmtBytes(_dlSpeeds[d.filename])+'/s':'';
+      var sz=d.total>0?(fmtBytes(d.received)+' / '+fmtBytes(d.total)):'';
+      var enc=encodeURIComponent(d.filename);
+      html+='<div class="dl-row">'
+        +'<div class="dl-top"><span class="dl-ic">📦</span>'
+        +'<div class="dl-info"><div class="dl-nm">'+d.filename+'</div>'
+        +'<div style="display:flex;justify-content:space-between;">'
+        +'<span class="dl-sz">'+sz+'</span>'
+        +(spd?'<span class="dl-speed">'+spd+'</span>':'')
+        +'</div></div></div>'
+        +'<div class="dl-bar"><div class="dl-fill" style="width:'+pct+'%"></div></div>'
+        +'<div style="display:flex;align-items:center;justify-content:space-between;">'
+        +'<span class="dl-sz" style="color:var(--ac);">'+pct+'% indirildi</span>'
+        +'<button class="dl-btn danger" style="height:20px;font-size:9.5px;" onclick="cancelDownload(decodeURIComponent(\''+enc+'\'))">✕ İptal</button>'
+        +'</div></div>';
+    });
+  }
+
+  if(done.length){
+    html+='<div class="spsec">TAMAMLANDI ('+done.length+')</div>';
+    done.forEach(function(d){
+      var enc=encodeURIComponent(d.filename);
+      var sp=d.savePath?d.savePath.replace(/\\/g,'\\\\'):'';
+      var encSp=encodeURIComponent(sp);
+      html+='<div class="dl-row">'
+        +'<div class="dl-top"><span class="dl-ic">✅</span>'
+        +'<div class="dl-info"><div class="dl-nm">'+d.filename+'</div>'
+        +'<div class="dl-sz">'+fmtBytes(d.total)+'</div>'
+        +'</div></div>'
+        +'<div class="dl-bar"><div class="dl-fill done" style="width:100%"></div></div>'
+        +'<div class="dl-actions">'
+        +(sp?'<button class="dl-btn primary" onclick="if(window.electronAPI&&window.electronAPI.openDownload)window.electronAPI.openDownload(decodeURIComponent(\''+encSp+'\'))">▶ Aç</button>':'')
+        +(sp?'<button class="dl-btn" onclick="if(window.electronAPI&&window.electronAPI.openDownloadsFolder)window.electronAPI.openDownloadsFolder()">📁 Klasörde Göster</button>':'')
+        +'<button class="dl-btn danger" onclick="removeDownload(decodeURIComponent(\''+enc+'\'))">✕ Kaldır</button>'
+        +'</div></div>';
+    });
+  }
+
+  if(err.length){
+    html+='<div class="spsec">BAŞARISIZ ('+err.length+')</div>';
+    err.forEach(function(d){
+      var enc=encodeURIComponent(d.filename);
+      html+='<div class="dl-row">'
+        +'<div class="dl-top"><span class="dl-ic">❌</span>'
+        +'<div class="dl-info"><div class="dl-nm">'+d.filename+'</div>'
+        +'<div class="dl-sz" style="color:var(--rd);">İndirme başarısız</div>'
+        +'</div></div>'
+        +'<div class="dl-bar"><div class="dl-fill err" style="width:100%"></div></div>'
+        +'<div class="dl-actions">'
+        +'<button class="dl-btn danger" onclick="removeDownload(decodeURIComponent(\''+enc+'\'))">✕ Kaldır</button>'
+        +'</div></div>';
+    });
+  }
+
+  if(!html){
+    html='<div style="padding:32px 16px;text-align:center;">'
+      +'<div style="font-size:32px;margin-bottom:8px;">📥</div>'
+      +'<div style="color:var(--tx2);font-size:12px;line-height:1.5;">Henüz indirme yok.<br>İndirilen dosyalar burada görünecek.</div>'
+      +'<button class="dl-btn" style="margin-top:12px;" onclick="if(window.electronAPI&&window.electronAPI.openDownloadsFolder)window.electronAPI.openDownloadsFolder()">📁 İndirilenler Klasörünü Aç</button>'
+      +'</div>';
+  }
+
+  document.getElementById('spBody').innerHTML=html;
+}
 function renderExt(){
   var installed=EXT_STORE.filter(e=>installedExt.has(e.id));
   document.getElementById('spBody').innerHTML=
@@ -2221,9 +2332,7 @@ function installExt(id,name){
 function renderSettings(){
   document.getElementById('spBody').innerHTML=
     '<div class="spsec">TEMA</div><div class="theme-grid">'+
-    Object.keys(THEMES).filter(k=>!THEMES[k].holiday).map(k=>{var t=THEMES[k];return '<div class="tcard '+(ct===k?'active':'')+'" onclick="applyThemeCard(\''+k+'\',this)"><div class="tprev" style="background:'+t.bg+'"><div class="tpdot" style="background:'+t.r+'"></div><div class="tpdot" style="background:'+t.g+'"></div><div class="tpdot" style="background:'+t.ac+'"></div></div><div class="tname">'+t.name+'</div><div class="tchk">✓</div></div>';}).join('')+
-    '</div><div class="spsec" style="margin-top:12px">🎉 BAYRAM & ÖZEL GÜNLER</div><div class="theme-grid">'+
-    Object.keys(THEMES).filter(k=>THEMES[k].holiday).map(k=>{var t=THEMES[k];return '<div class="tcard '+(ct===k?'active':'')+'" onclick="applyThemeCard(\''+k+'\',this)"><div class="tprev" style="background:'+t.bg+'"><div class="tpdot" style="background:'+t.r+'"></div><div class="tpdot" style="background:'+t.g+'"></div><div class="tpdot" style="background:'+t.ac+'"></div></div><div class="tname">'+t.name+'</div><div class="tchk">✓</div></div>';}).join('')+
+    Object.keys(THEMES).map(k=>{var t=THEMES[k];return '<div class="tcard '+(ct===k?'active':'')+'" onclick="applyThemeCard(\''+k+'\',this)"><div class="tprev" style="background:'+t.bg+'"><div class="tpdot" style="background:'+t.r+'"></div><div class="tpdot" style="background:'+t.g+'"></div><div class="tpdot" style="background:'+t.ac+'"></div></div><div class="tname">'+t.name+'</div><div class="tchk">✓</div></div>';}).join('')+
     '</div>'+
     '<div class="spsec">ARAMA MOTORU</div><div class="se-grid">'+
     Object.keys(SE).map(k=>{var se=SE[k];return '<div class="secard '+(cfg.searchEngine===k?'active':'')+'" onclick="setSeCard(\''+k+'\',this)"><span class="se-ic">'+se.ic+'</span><span class="se-nm">'+se.name+'</span></div>';}).join('')+
@@ -2743,453 +2852,7 @@ var TB_LOGO="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABAAAAAQACAYAAAB/HSuDA
 init();
 
 // ══════════════════════════════════════════
-//  BAYRAM SİSTEMİ — Otomatik tema + animasyon
-// ══════════════════════════════════════════
-(function(){
-  // Hicri takvim yaklaşık hesabı için sabit yıllar (2025-2030)
-  // Ramazan ve Kurban değişken olduğu için sabit liste
-  var HOLIDAY_DATES = {
-    // Sabit Millî Bayramlar
-    '03-08': 'kadinlar',
-    '04-23': 'n23nisan',
-    '05-01': 'iscibayram',
-    '05-19': 'n19mayis',
-    '08-30': 'n30agustos',
-    '10-29': 'cumhuriyet',
-    // Nevruz
-    '03-21': 'nevruz',
-    // Dini Bayramlar (yaklaşık, her yıl kayar — 2025-2030 arası)
-    // Ramazan Bayramı (2025: 30 Mart, 2026: 20 Mar, 2027: 10 Mar, 2028: 28 Feb, 2029: 18 Feb, 2030: 08 Feb)
-    '03-30': 'ramazan', '03-20': 'ramazan', '03-10': 'ramazan',
-    '02-28': 'ramazan', '02-18': 'ramazan', '02-08': 'ramazan',
-    // Kurban Bayramı (2025: 5 Haz, 2026: 26 May, 2027: 16 May, 2028: 5 May, 2029: 24 Apr, 2030: 13 Apr)
-    '06-05': 'kurban', '05-26': 'kurban', '05-16': 'kurban',
-    '05-05': 'kurban', '04-24': 'kurban', '04-13': 'kurban',
-    // Kadir Gecesi (Ramazanın 27. gecesi — yaklaşık)
-    '03-26': 'kadir', '03-16': 'kadir', '03-06': 'kadir',
-    '02-24': 'kadir', '02-14': 'kadir', '02-04': 'kadir',
-    // Mevlid Kandili (2025: 4 Eyl, 2026: 25 Ağu, 2027: 14 Ağu, 2028: 3 Ağu, 2029: 23 Tem, 2030: 13 Tem)
-    '09-04': 'mevlid', '08-25': 'mevlid', '08-14': 'mevlid',
-    '08-03': 'mevlid', '07-23': 'mevlid', '07-13': 'mevlid'
-  };
-
-  function getTodayKey(){
-    var d = new Date();
-    var m = String(d.getMonth()+1).padStart(2,'0');
-    var day = String(d.getDate()).padStart(2,'0');
-    return m+'-'+day;
-  }
-
-  function getHolidayTheme(){
-    return HOLIDAY_DATES[getTodayKey()] || null;
-  }
-
-  // ── Parçacık Animasyonu ──────────────────
-  var canvas = document.getElementById('holiday-canvas');
-  var ctx = canvas ? canvas.getContext('2d') : null;
-  var particles = [];
-  var animFrame = null;
-  var sceneFrame = null;
-
-  function resizeCanvas(){
-    if(!canvas) return;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
-
-  // ── Parçacık renkleri (tema bazlı) ──────
-  var PCOLORS = {
-    'confetti-red':   ['#e63946','#ff6b6b','#ffffff','#c1121f','#fbbf24'],
-    'confetti-pink':  ['#f9a8d4','#ec4899','#c084fc','#ffffff','#f472b6'],
-    'confetti-green': ['#4ade80','#a3e635','#facc15','#ffffff','#34d399'],
-    'confetti-color': ['#f59e0b','#a855f7','#34d399','#f472b6','#38bdf8','#fbbf24'],
-    'stars-gold':     ['#f5c842','#fde68a','#fffbcc','#d4a017','#ffffff'],
-    'stars-green':    ['#6abf4b','#bbf7d0','#ffffff','#4ade80','#a3e635'],
-    'stars-blue':     ['#7eb3ff','#c084fc','#e0f2fe','#ffffff','#a5f3fc']
-  };
-
-  function drawStarShape(cx,cy,r,color,alpha){
-    ctx.save(); ctx.globalAlpha=alpha; ctx.fillStyle=color;
-    ctx.shadowColor=color; ctx.shadowBlur=10;
-    ctx.beginPath();
-    for(var i=0;i<5;i++){
-      var a=(i*4*Math.PI/5)-Math.PI/2, b=((i*4+2)*Math.PI/5)-Math.PI/2;
-      if(i===0) ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
-      else ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
-      ctx.lineTo(cx+(r/2)*Math.cos(b),cy+(r/2)*Math.sin(b));
-    }
-    ctx.closePath(); ctx.fill(); ctx.restore();
-  }
-
-  // ── Bayrama özel büyük canvas sahneleri ──
-
-  // Türk Bayrağı
-  function drawTurkishFlag(cx,cy,w,h,alpha){
-    ctx.save(); ctx.globalAlpha=alpha;
-    ctx.fillStyle='#e63946'; ctx.beginPath();
-    ctx.roundRect(cx-w/2,cy-h/2,w,h,12); ctx.fill();
-    // Ay
-    ctx.fillStyle='#fff';
-    ctx.beginPath(); ctx.arc(cx-w*0.07,cy,h*0.3,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle='#e63946';
-    ctx.beginPath(); ctx.arc(cx+w*0.02,cy,h*0.24,0,Math.PI*2); ctx.fill();
-    // Yıldız
-    ctx.fillStyle='#fff';
-    var sr=h*0.12, sx=cx+w*0.16, sy=cy;
-    ctx.beginPath();
-    for(var i=0;i<5;i++){
-      var a2=(i*4*Math.PI/5)-Math.PI/2, b2=((i*4+2)*Math.PI/5)-Math.PI/2;
-      if(i===0) ctx.moveTo(sx+sr*Math.cos(a2),sy+sr*Math.sin(a2));
-      else ctx.lineTo(sx+sr*Math.cos(a2),sy+sr*Math.sin(a2));
-      ctx.lineTo(sx+(sr/2)*Math.cos(b2),sy+(sr/2)*Math.sin(b2));
-    }
-    ctx.closePath(); ctx.fill();
-    ctx.restore();
-  }
-
-  // Hilal + yıldız (dini bayramlar)
-  function drawCrescent(cx,cy,r,color,alpha){
-    ctx.save(); ctx.globalAlpha=alpha;
-    ctx.fillStyle=color; ctx.shadowColor=color; ctx.shadowBlur=30;
-    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle='#000820';
-    ctx.beginPath(); ctx.arc(cx+r*0.3,cy-r*0.1,r*0.82,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle=color; ctx.shadowBlur=20;
-    var sr2=r*0.2, sx2=cx+r*0.85, sy2=cy-r*0.7;
-    ctx.beginPath();
-    for(var i=0;i<5;i++){
-      var a3=(i*4*Math.PI/5)-Math.PI/2, b3=((i*4+2)*Math.PI/5)-Math.PI/2;
-      if(i===0) ctx.moveTo(sx2+sr2*Math.cos(a3),sy2+sr2*Math.sin(a3));
-      else ctx.lineTo(sx2+sr2*Math.cos(a3),sy2+sr2*Math.sin(a3));
-      ctx.lineTo(sx2+(sr2/2)*Math.cos(b3),sy2+(sr2/2)*Math.sin(b3));
-    }
-    ctx.closePath(); ctx.fill();
-    ctx.restore();
-  }
-
-  // Çiçek (Kadınlar günü, Nevruz)
-  function drawFlower(cx,cy,r,color,alpha){
-    ctx.save(); ctx.globalAlpha=alpha;
-    for(var p2=0;p2<6;p2++){
-      var angle=p2*(Math.PI/3);
-      ctx.fillStyle=color; ctx.shadowColor=color; ctx.shadowBlur=15;
-      ctx.beginPath();
-      ctx.ellipse(cx+Math.cos(angle)*r*0.5, cy+Math.sin(angle)*r*0.5, r*0.4, r*0.22, angle, 0, Math.PI*2);
-      ctx.fill();
-    }
-    ctx.fillStyle='#fde68a'; ctx.shadowBlur=20;
-    ctx.beginPath(); ctx.arc(cx,cy,r*0.28,0,Math.PI*2); ctx.fill();
-    ctx.restore();
-  }
-
-  // Güneş (19 Mayıs, 23 Nisan)
-  function drawSun(cx,cy,r,color,alpha){
-    ctx.save(); ctx.globalAlpha=alpha;
-    ctx.strokeStyle=color; ctx.lineWidth=r*0.08; ctx.shadowColor=color; ctx.shadowBlur=20;
-    for(var i2=0;i2<12;i2++){
-      var a4=i2*(Math.PI/6);
-      ctx.beginPath();
-      ctx.moveTo(cx+Math.cos(a4)*r*0.55,cy+Math.sin(a4)*r*0.55);
-      ctx.lineTo(cx+Math.cos(a4)*r*0.9,cy+Math.sin(a4)*r*0.9);
-      ctx.stroke();
-    }
-    ctx.fillStyle=color; ctx.shadowBlur=30;
-    ctx.beginPath(); ctx.arc(cx,cy,r*0.45,0,Math.PI*2); ctx.fill();
-    ctx.restore();
-  }
-
-  // Yıldız dolu gece (Kadir)
-  function drawNightSky(alpha){
-    ctx.save(); ctx.globalAlpha=alpha;
-    var stars2=[
-      [0.15,0.15,14],[0.8,0.1,10],[0.5,0.2,18],[0.25,0.35,8],[0.7,0.3,12],
-      [0.1,0.55,10],[0.9,0.5,8],[0.45,0.45,22],[0.6,0.65,10],[0.3,0.7,14],
-      [0.85,0.75,9],[0.55,0.08,8],[0.35,0.25,6],[0.72,0.18,7]
-    ];
-    stars2.forEach(function(s){
-      drawStarShape(s[0]*canvas.width, s[1]*canvas.height, s[2], '#c0d8ff', alpha*0.9);
-    });
-    // Büyük hilal ortada
-    drawCrescent(canvas.width/2, canvas.height/2, 70, '#7eb3ff', alpha*0.85);
-    ctx.restore();
-  }
-
-  // Zafer madalyası / kılıç (30 Ağustos)
-  function drawMedal(cx,cy,r,alpha){
-    ctx.save(); ctx.globalAlpha=alpha;
-    // Kurdele
-    ctx.fillStyle='#e63946'; ctx.shadowColor='#e63946'; ctx.shadowBlur=15;
-    ctx.beginPath(); ctx.moveTo(cx,cy-r*1.2); ctx.lineTo(cx-r*0.3,cy-r*0.5); ctx.lineTo(cx+r*0.3,cy-r*0.5); ctx.closePath(); ctx.fill();
-    ctx.fillStyle='#fbbf24';
-    ctx.beginPath(); ctx.moveTo(cx,cy-r*1.2); ctx.lineTo(cx-r*0.15,cy-r*0.5); ctx.lineTo(cx+r*0.15,cy-r*0.5); ctx.closePath(); ctx.fill();
-    // Madalyon
-    ctx.fillStyle='#fbbf24'; ctx.shadowColor='#fbbf24'; ctx.shadowBlur=25;
-    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle='#d97706';
-    ctx.beginPath(); ctx.arc(cx,cy,r*0.82,0,Math.PI*2); ctx.fill();
-    // Yıldız
-    ctx.fillStyle='#fbbf24'; ctx.shadowBlur=10;
-    var sr3=r*0.45;
-    ctx.beginPath();
-    for(var i=0;i<5;i++){
-      var a5=(i*4*Math.PI/5)-Math.PI/2, b5=((i*4+2)*Math.PI/5)-Math.PI/2;
-      if(i===0) ctx.moveTo(cx+sr3*Math.cos(a5),cy+sr3*Math.sin(a5));
-      else ctx.lineTo(cx+sr3*Math.cos(a5),cy+sr3*Math.sin(a5));
-      ctx.lineTo(cx+(sr3/2)*Math.cos(b5),cy+(sr3/2)*Math.sin(b5));
-    }
-    ctx.closePath(); ctx.fill();
-    ctx.restore();
-  }
-
-  // Çocuk uçurtması (23 Nisan)
-  function drawKite(cx,cy,size,color,alpha){
-    ctx.save(); ctx.globalAlpha=alpha;
-    ctx.fillStyle=color; ctx.shadowColor=color; ctx.shadowBlur=20;
-    ctx.beginPath(); ctx.moveTo(cx,cy-size); ctx.lineTo(cx+size*0.6,cy); ctx.lineTo(cx,cy+size*0.8); ctx.lineTo(cx-size*0.6,cy); ctx.closePath(); ctx.fill();
-    ctx.strokeStyle='rgba(255,255,255,0.5)'; ctx.lineWidth=1.5;
-    ctx.beginPath(); ctx.moveTo(cx,cy-size); ctx.lineTo(cx,cy+size*0.8); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(cx-size*0.6,cy); ctx.lineTo(cx+size*0.6,cy); ctx.stroke();
-    // Kuyruk
-    ctx.strokeStyle=color; ctx.lineWidth=2; ctx.setLineDash([6,4]);
-    ctx.beginPath(); ctx.moveTo(cx,cy+size*0.8);
-    ctx.quadraticCurveTo(cx+size*0.4,cy+size*1.4,cx+size*0.2,cy+size*1.9); ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.restore();
-  }
-
-  // ── Sahne tanımları (her bayram için) ────
-  var SCENES = {
-    cumhuriyet: function(t){ // Bayrak + konfeti
-      var cx=canvas.width/2, cy=canvas.height/2;
-      var sc=Math.min(canvas.width,canvas.height)*0.35;
-      var alpha=Math.min(1,t*1.5)*0.9;
-      // Parlama arka plan
-      ctx.save(); ctx.globalAlpha=alpha*0.15;
-      var grd=ctx.createRadialGradient(cx,cy,0,cx,cy,sc*1.2);
-      grd.addColorStop(0,'#e63946'); grd.addColorStop(1,'transparent');
-      ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(cx,cy,sc*1.2,0,Math.PI*2); ctx.fill(); ctx.restore();
-      drawTurkishFlag(cx,cy,sc*1.1,sc*0.73,alpha);
-    },
-    ramazan: function(t){
-      var cx=canvas.width/2, cy=canvas.height/2;
-      var alpha=Math.min(1,t*1.5)*0.9;
-      ctx.save(); ctx.globalAlpha=alpha*0.12;
-      var grd2=ctx.createRadialGradient(cx,cy,0,cx,cy,180);
-      grd2.addColorStop(0,'#f5c842'); grd2.addColorStop(1,'transparent');
-      ctx.fillStyle=grd2; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.restore();
-      drawCrescent(cx,cy,90,'#f5c842',alpha);
-    },
-    kurban: function(t){
-      var cx=canvas.width/2, cy=canvas.height/2;
-      var alpha=Math.min(1,t*1.5)*0.9;
-      drawCrescent(cx,cy,90,'#6abf4b',alpha);
-    },
-    kadir: function(t){
-      drawNightSky(Math.min(1,t*1.2)*0.85);
-    },
-    mevlid: function(t){
-      var cx=canvas.width/2, cy=canvas.height/2;
-      var alpha=Math.min(1,t*1.5)*0.85;
-      drawCrescent(cx,cy,80,'#d4956a',alpha);
-      // Fener efekti
-      ctx.save(); ctx.globalAlpha=alpha*0.2;
-      var g3=ctx.createRadialGradient(cx,cy,0,cx,cy,200);
-      g3.addColorStop(0,'#f5c842'); g3.addColorStop(1,'transparent');
-      ctx.fillStyle=g3; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.restore();
-    },
-    nevruz: function(t){
-      var cx=canvas.width/2, cy=canvas.height/2;
-      var alpha=Math.min(1,t*1.5)*0.85;
-      drawFlower(cx,cy,80,'#a855f7',alpha);
-      drawFlower(cx-160,cy+60,40,'#f59e0b',alpha*0.7);
-      drawFlower(cx+160,cy+60,40,'#34d399',alpha*0.7);
-    },
-    kadinlar: function(t){
-      var cx=canvas.width/2, cy=canvas.height/2;
-      var alpha=Math.min(1,t*1.5)*0.85;
-      drawFlower(cx,cy,85,'#f9a8d4',alpha);
-      drawFlower(cx-170,cy+40,38,'#c084fc',alpha*0.75);
-      drawFlower(cx+170,cy+40,38,'#ec4899',alpha*0.75);
-    },
-    iscibayram: function(t){
-      var cx=canvas.width/2, cy=canvas.height/2;
-      var alpha=Math.min(1,t*1.5)*0.85;
-      // Dişli
-      ctx.save(); ctx.globalAlpha=alpha; ctx.fillStyle='#4ade80'; ctx.shadowColor='#4ade80'; ctx.shadowBlur=20;
-      ctx.beginPath();
-      for(var i=0;i<12;i++){
-        var a6=i*(Math.PI/6), inner=55, outer=75;
-        ctx.lineTo(cx+Math.cos(a6)*outer,cy+Math.sin(a6)*outer);
-        ctx.lineTo(cx+Math.cos(a6+Math.PI/12)*inner,cy+Math.sin(a6+Math.PI/12)*inner);
-      }
-      ctx.closePath(); ctx.fill();
-      ctx.fillStyle='#0a140a';
-      ctx.beginPath(); ctx.arc(cx,cy,35,0,Math.PI*2); ctx.fill();
-      ctx.restore();
-    },
-    n23nisan: function(t){
-      var cx=canvas.width/2, cy=canvas.height/2;
-      var alpha=Math.min(1,t*1.5)*0.85;
-      drawKite(cx-80,cy-20,55,'#34d399',alpha);
-      drawKite(cx+100,cy+30,38,'#38bdf8',alpha*0.8);
-      drawSun(cx+20,cy-80,35,'#fbbf24',alpha*0.9);
-    },
-    n19mayis: function(t){
-      var cx=canvas.width/2, cy=canvas.height/2;
-      var alpha=Math.min(1,t*1.5)*0.85;
-      drawSun(cx,cy-40,70,'#a3e635',alpha);
-      // Meşale
-      ctx.save(); ctx.globalAlpha=alpha;
-      ctx.fillStyle='#d97706'; ctx.shadowColor='#fbbf24'; ctx.shadowBlur=30;
-      ctx.fillRect(cx-8,cy+20,16,70);
-      ctx.fillStyle='#fbbf24';
-      ctx.beginPath(); ctx.moveTo(cx,cy-20); ctx.bezierCurveTo(cx+25,cy+10,cx+20,cy+40,cx,cy+20); ctx.bezierCurveTo(cx-20,cy+40,cx-25,cy+10,cx,cy-20); ctx.fill();
-      ctx.fillStyle='#fff176'; ctx.shadowBlur=50;
-      ctx.beginPath(); ctx.ellipse(cx,cy+5,10,20,0,0,Math.PI*2); ctx.fill();
-      ctx.restore();
-    },
-    n30agustos: function(t){
-      var cx=canvas.width/2, cy=canvas.height/2;
-      var alpha=Math.min(1,t*1.5)*0.9;
-      ctx.save(); ctx.globalAlpha=alpha*0.15;
-      var g4=ctx.createRadialGradient(cx,cy,0,cx,cy,200);
-      g4.addColorStop(0,'#fbbf24'); g4.addColorStop(1,'transparent');
-      ctx.fillStyle=g4; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.restore();
-      drawMedal(cx,cy,72,alpha);
-      drawTurkishFlag(cx-160,cy+30,120,80,alpha*0.75);
-    }
-  };
-
-  // ── Konfeti parçacıkları ─────────────────
-  function spawnConfetti(colors, count){
-    count = count || 80;
-    for(var i=0;i<count;i++){
-      particles.push({
-        x: Math.random()*canvas.width,
-        y: -20 - Math.random()*100,
-        vx: (Math.random()-0.5)*3,
-        vy: Math.random()*2.5+1.5,
-        size: Math.random()*7+4,
-        color: colors[Math.floor(Math.random()*colors.length)],
-        rot: Math.random()*360, rotV: (Math.random()-0.5)*5,
-        alpha: 1, alphaV: -0.006,
-        shape: Math.random()>0.5?'rect':'circle'
-      });
-    }
-  }
-
-  // ── Ana animasyon döngüsü ────────────────
-  var sceneTime = 0;
-  var sceneTheme = null;
-  var sceneAlpha = 0;
-  var sceneFading = false;
-  var SCENE_DURATION = 5000; // ms — sahne 5 saniye görünür
-  var sceneStart = 0;
-
-  function animLoop(){
-    if(!ctx) return;
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    // Sahne çiz
-    if(sceneTheme && SCENES[sceneTheme]){
-      var elapsed = Date.now() - sceneStart;
-      var progress = Math.min(elapsed / 600, 1); // 0.6s giriş
-      var fadeOut = elapsed > SCENE_DURATION ? Math.max(0, 1-(elapsed-SCENE_DURATION)/800) : 1;
-      sceneAlpha = progress * fadeOut;
-      ctx.save(); ctx.globalAlpha = sceneAlpha;
-      SCENES[sceneTheme](progress);
-      ctx.restore();
-      if(elapsed > SCENE_DURATION + 800){
-        sceneTheme = null;
-      }
-    }
-
-    // Parçacıklar
-    particles = particles.filter(function(p){ return p.alpha > 0 && p.y < canvas.height+30; });
-    particles.forEach(function(p){
-      p.x+=p.vx; p.y+=p.vy; p.rot+=p.rotV; p.alpha+=p.alphaV;
-      ctx.save(); ctx.globalAlpha=Math.max(0,p.alpha);
-      ctx.fillStyle=p.color; ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
-      if(p.shape==='rect') ctx.fillRect(-p.size/2,-p.size/4,p.size,p.size/2);
-      else { ctx.beginPath(); ctx.arc(0,0,p.size/2,0,Math.PI*2); ctx.fill(); }
-      ctx.restore();
-    });
-
-    if(sceneTheme || particles.length > 0){
-      animFrame = requestAnimationFrame(animLoop);
-    } else {
-      if(canvas){ canvas.style.opacity='0'; }
-    }
-  }
-
-  // ── Banner göster ────────────────────────
-  function showBanner(theme){
-    var t = THEMES[theme];
-    if(!t) return;
-    var banner = document.getElementById('holiday-banner');
-    if(!banner) return;
-    banner.textContent = t.emoji ? t.emoji + '  ' + t.msg : t.msg;
-    banner.classList.add('show');
-    setTimeout(function(){ banner.classList.remove('show'); }, 12000);
-  }
-
-  // ── Bayram başlat — TEK SEFERLIK ────────
-  function launchHoliday(theme){
-    var t = THEMES[theme];
-    if(!t || !t.holiday) return;
-    // 30 Agustos: sadece banner, konfeti ve canvas sahnesi yok
-    if(theme === 'n30agustos'){
-      setTimeout(function(){ showBanner(theme); }, 400);
-      return;
-    }
-    if(canvas){ canvas.style.opacity='1'; }
-    if(animFrame) cancelAnimationFrame(animFrame);
-    particles = [];
-    var confColors = PCOLORS[t.particles] || PCOLORS['confetti-color'];
-    spawnConfetti(confColors, 100);
-    sceneTheme = theme;
-    sceneStart = Date.now();
-    animLoop();
-    setTimeout(function(){ showBanner(theme); }, 400);
-  }
-
-  // Temayı uygula fonksiyonunu genişlet
-  var _origApplyTheme = applyTheme;
-  window.applyTheme = applyTheme = function(name, save){
-    _origApplyTheme(name, save);
-    if(THEMES[name] && THEMES[name].holiday){
-      launchHoliday(name);
-    }
-  };
-
-  // Sayfa açılınca bugün bayram mı kontrol et
-  window.addEventListener('load', function(){
-    setTimeout(function(){
-      var todayHoliday = getHolidayTheme();
-      if(todayHoliday){
-        // 30 Agustos icin: tema degistirme, sadece banner goster
-        if(todayHoliday === 'n30agustos'){
-          setTimeout(function(){ showBanner('n30agustos'); }, 1500);
-        } else if(cfg.theme !== todayHoliday){
-          var savedTheme = cfg.theme;
-          if(!savedTheme || savedTheme==='default' || (THEMES[savedTheme] && THEMES[savedTheme].holiday)){
-            applyTheme(todayHoliday, true);
-          } else {
-            launchHoliday(todayHoliday);
-            showBanner(todayHoliday);
-          }
-        } else {
-          setTimeout(function(){ launchHoliday(todayHoliday); }, 1000);
-        }
-      }
-    }, 1500);
-  });
-
-  // Tema seçim panelinde bayram temalarını ayır
-  var _origRenderSettings = window.renderSettings;
-})();
+// Bayram sistemi kaldırıldı.
 
 </script>
 

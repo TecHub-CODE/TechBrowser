@@ -87,8 +87,8 @@ app.setName('TechBrowser02');
 // ══════════════════════════════════════════
 //  İZİN YÖNETİMİ
 // ══════════════════════════════════════════
-const SILENT_DENY = ['notifications', 'push', 'backgroundSync', 'periodicBackgroundSync'];
-const ASK_USER    = ['camera', 'microphone', 'geolocation', 'midi', 'midiSysex'];
+const SILENT_DENY = ['notifications', 'push', 'backgroundSync', 'periodicBackgroundSync', 'geolocation'];
+const ASK_USER    = ['camera', 'microphone', 'midi', 'midiSysex'];
 
 function buildPermissionHandler(win) {
   return (webContents, permission, callback, details) => {
@@ -332,7 +332,7 @@ app.whenReady().then(() => {
     const currentVersion = app.getVersion();
     if (settings.lastVersion && settings.lastVersion !== currentVersion) {
       // Sürüm değişmiş → yenilikler penceresini göster
-      mainWindow.once('ready-to-show', () => {
+      const showChangelog = () => {
         setTimeout(() => {
           mainWindow.webContents.send('show-changelog', {
             version: currentVersion,
@@ -341,8 +341,14 @@ app.whenReady().then(() => {
           settings.lastVersion = currentVersion;
           settings.pendingReleaseNotes = null;
           try { fs.writeFileSync(settingsPath, JSON.stringify(settings)); } catch(e) {}
-        }, 1500);
-      });
+        }, 2000);
+      };
+      // ready-to-show henüz çalışmadıysa bekle, çalıştıysa direkt çağır
+      if (mainWindow.isVisible()) {
+        showChangelog();
+      } else {
+        mainWindow.once('ready-to-show', showChangelog);
+      }
     } else if (!settings.lastVersion) {
       settings.lastVersion = currentVersion;
       try { fs.writeFileSync(settingsPath, JSON.stringify(settings)); } catch(e) {}
@@ -527,11 +533,11 @@ ipcMain.on('fullscreen', () => {
 // ══════════════════════════════════════════
 const VPN_SERVERS = {
   tr: null,
-  de: 'socks5://51.75.126.222:1080',
-  nl: 'socks5://185.220.101.45:10965',
-  us: 'socks5://198.199.116.78:1080',
-  uk: 'socks5://51.79.52.80:3080',
-  fr: 'socks5://51.158.119.88:1234',
+  de: 'socks5://176.9.119.170:1080',
+  nl: 'socks5://51.158.172.163:16379',
+  us: 'socks5://72.10.164.178:12725',
+  uk: 'socks5://51.89.73.159:3128',
+  fr: 'socks5://163.172.182.88:3128',
 };
 
 ipcMain.handle('vpn-connect', async (event, countryCode) => {
