@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /browserSync/{uid} {
+      function ownsWithTotp() {
+        return request.auth != null
+          && request.auth.uid == uid
+          && request.auth.token.email_verified == true
+          && request.auth.token.firebase.sign_in_second_factor == 'totp';
+      }
+      allow read, delete: if ownsWithTotp();
+      allow create, update: if ownsWithTotp()
+        && request.resource.data.keys().hasOnly(['bookmarks'])
+        && request.resource.data.bookmarks is string
+        && request.resource.data.bookmarks.size() <= 131072;
+    }
+  }
+}

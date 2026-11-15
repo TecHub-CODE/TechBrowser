@@ -1,0 +1,35 @@
+name = "techbrowser-api"
+main = "worker.mjs"
+compatibility_date = "2026-09-11"
+workers_dev = true
+preview_urls = false
+[vars]
+GROQ_MODEL = "openai/gpt-oss-20b"
+
+[[ratelimits]]
+name = "API_LIMITER"
+namespace_id = "1001"
+simple = { limit = 10, period = 60 }
+
+[[durable_objects.bindings]]
+name = "EMAIL_CHALLENGES"
+class_name = "EmailChallenge"
+
+[[migrations]]
+tag = "email-challenges-v1"
+new_sqlite_classes = ["EmailChallenge"]
+
+[[durable_objects.bindings]]
+name = "AI_QUOTAS"
+class_name = "AiQuota"
+
+[[migrations]]
+tag = "ai-quota-v1"
+new_sqlite_classes = ["AiQuota"]
+
+
+[observability]
+enabled = true
+
+[observability.logs]
+enabled = true

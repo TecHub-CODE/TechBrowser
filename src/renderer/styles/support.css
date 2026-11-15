@@ -1,0 +1,25 @@
+.rcat-btn {
+  padding: 8px 10px;
+  border-radius: 9px;
+  border: 1px solid #2a2a4a;
+  background: rgba(255, 255, 255, 0.03);
+  color: #9ca3af;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family:
+    Space Grotesk,
+    sans-serif;
+  transition: all 0.15s;
+  text-align: left;
+}
+.rcat-btn:hover {
+  border-color: #4f8cff44;
+  color: #fff;
+  background: rgba(79, 140, 255, 0.06);
+}
+.rcat-btn.active {
+  border-color: #4f8cff;
+  color: #4f8cff;
+  background: rgba(79, 140, 255, 0.1);
+}

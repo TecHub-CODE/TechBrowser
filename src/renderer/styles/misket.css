@@ -1,0 +1,397 @@
+/* Account flows: plain surfaces, clear hierarchy, no decorative logo header. */
+#authModal,
+#accountModal,
+#misketEditor {
+  background: var(--sf) !important;
+  border: 1px solid var(--bd2);
+  border-radius: 10px;
+  box-shadow: 0 20px 70px #0005;
+}
+#authModal {
+  width: min(420px, calc(100vw - 32px));
+  max-height: calc(100dvh - 40px);
+  overflow: auto;
+}
+#authModal .mhead {
+  padding: 28px 28px 18px;
+  border: 0;
+}
+#authModal .mhead-logo {
+  gap: 0;
+}
+#authModal .mtitle {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 550;
+  letter-spacing: -0.6px;
+  line-height: 1.35;
+}
+#authModal .mbody {
+  padding: 0 28px 28px;
+}
+#authModal .auth-tabs {
+  display: flex;
+  gap: 24px;
+  padding: 0;
+  margin: 0 0 24px;
+  border: 0;
+  border-bottom: 1px solid var(--bd2);
+  border-radius: 0;
+  background: transparent;
+}
+#authModal .auth-tab {
+  flex: none;
+  padding: 12px 0;
+  border-radius: 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--tx2);
+  font-weight: 500;
+  box-shadow: none;
+}
+#authModal .auth-tab.active {
+  color: var(--tx);
+  border-bottom-color: var(--tx);
+  background: none;
+}
+#authModal .fl {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  margin-bottom: 8px;
+}
+#authModal .fi {
+  border-radius: 6px;
+  height: 42px;
+  background: var(--bg);
+  border: 1px solid var(--bd2);
+  box-shadow: none;
+  font-size: 13px;
+}
+#authModal .btn-pr {
+  border-radius: 6px;
+  background: var(--ac);
+  color: var(--bg);
+  font-weight: 550;
+  box-shadow: none;
+  height: 42px;
+}
+#authModal .btn-google {
+  border-radius: 6px;
+  background: transparent;
+  box-shadow: none;
+  font-weight: 500;
+}
+#authModal .auth-link {
+  font-weight: 450;
+  font-size: 12px;
+}
+#authModal [data-layout='static-37'],
+#authModal [data-layout='static-41'],
+#authModal [data-layout='static-50'] {
+  text-align: left;
+  padding: 0;
+  margin: 0 0 20px;
+}
+#authModal [data-layout='static-38'],
+#authModal [data-layout='static-39'],
+#authModal [data-layout='static-42'],
+#authModal [data-layout='static-43'],
+#authModal [data-layout='static-51'] {
+  display: none;
+}
+#authModal [data-layout='static-40'],
+#authModal [data-layout='static-44'] {
+  color: var(--tx2);
+  font-size: 13px;
+  line-height: 1.75;
+}
+#authModal [data-layout='static-45'],
+#authModal [data-layout='static-52'] {
+  background: transparent;
+  color: var(--tx2);
+  border: 0;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+#authModal .otp-inp {
+  border-radius: 6px;
+  background: var(--bg);
+}
+.misket-modal {
+  width: min(600px, calc(100vw - 32px));
+  max-height: calc(100dvh - 40px);
+  overflow: auto;
+}
+.misket-modal .mhead {
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid var(--bd2);
+}
+.misket-modal h2 {
+  font-size: 20px;
+  font-weight: 550;
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+.misket-body {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 28px;
+  padding: 28px 24px;
+}
+.misket-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.misket-preview {
+  width: 176px;
+  height: 176px;
+  contain: layout paint;
+}
+.misket-preview svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.misket-controls {
+  align-self: center;
+}
+.misket-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--tx2);
+}
+.misket-controls select {
+  width: 100%;
+  padding: 10px;
+  background: var(--bg);
+  color: var(--tx);
+  border: 1px solid var(--bd2);
+  border-radius: 6px;
+}
+.misket-colors {
+  display: flex;
+  gap: 20px;
+  margin-top: 16px;
+}
+.misket-colors[hidden] {
+  display: none;
+}
+.misket-colors label {
+  font-size: 12px;
+  color: var(--tx2);
+}
+.misket-colors input {
+  display: block;
+  width: 40px;
+  height: 30px;
+  padding: 2px;
+  margin-top: 8px;
+  background: var(--sf);
+  border: 1px solid var(--bd2);
+  border-radius: 4px;
+}
+.misket-motion {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+  font-size: 12px;
+  color: var(--tx);
+}
+.misket-hint,
+.misket-local {
+  font-size: 11px;
+  color: var(--tx3);
+  line-height: 1.7;
+  margin-top: 8px;
+}
+.misket-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid var(--bd2);
+  padding: 16px 24px;
+}
+.misket-actions button {
+  min-width: 82px;
+  padding: 10px 14px;
+  border: 1px solid var(--bd2);
+  background: transparent;
+  color: var(--tx);
+  border-radius: 6px;
+  cursor: pointer;
+}
+#misketSave {
+  background: var(--ac);
+  color: var(--bg);
+}
+#misketSave:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+#misketError {
+  color: var(--rd);
+  font-size: 12px;
+  margin: 0;
+  padding: 0 24px 12px;
+}
+#misketError:empty {
+  display: none;
+}
+.misket-eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.misket-live .misket-eyes {
+  animation: misket-blink 5.2s infinite;
+}
+@keyframes misket-blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  94%,
+  96% {
+    transform: scaleY(0.12);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .misket-live .misket-eyes {
+    animation: none;
+  }
+}
+@media (max-width: 540px) {
+  .misket-body {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .misket-preview {
+    width: 128px;
+    height: 128px;
+  }
+}
+
+.misket-preview {
+  position: relative;
+}
+.misket-preview canvas,
+.misket-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.misket-preview canvas {
+  visibility: hidden;
+}
+.misket-preview.has-gl canvas {
+  visibility: visible;
+}
+.misket-preview.has-gl .misket-fallback {
+  visibility: hidden;
+}
+.misket-preview.has-gl .misket-eyes {
+  animation: none;
+}
+
+/* Adapted from the supplied login card: brand, social sign-in, form, footer. */
+#authModal {
+  width: min(440px, calc(100vw - 32px));
+}
+#authModal .mhead {
+  padding: 28px 32px 20px;
+  align-items: flex-start;
+}
+#authModal .mhead-logo {
+  width: 100%;
+}
+#authModal .mbody {
+  padding: 0 32px;
+}
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.auth-brand img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+.auth-brand span {
+  font-size: 14px;
+  font-weight: 550;
+  color: var(--tx);
+}
+body[data-theme='light'] .auth-brand img,
+body.custom-light .auth-brand img {
+  filter: invert(1);
+}
+#authModal .auth-intro {
+  font-size: 20px;
+  font-weight: 450;
+  color: var(--tx2);
+  letter-spacing: -0.5px;
+  margin: 0 0 4px;
+}
+#authModal .mtitle {
+  font-size: 23px;
+  line-height: 1.35;
+}
+#authModal .auth-social .btn-google {
+  height: 44px;
+  width: 100%;
+  justify-content: center;
+  margin: 0;
+}
+#authModal .auth-social label {
+  margin-top: 10px;
+  font-size: 11px;
+}
+#authModal [data-layout='static-32'] {
+  margin: 20px 0;
+}
+#authModal .auth-switch {
+  margin: 24px -32px 0;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-top: 1px solid var(--bd2);
+  font-size: 12px;
+  color: var(--tx2);
+}
+#authModal .auth-switch .auth-tab {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--tx);
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+#authModal .auth-switch .auth-tab[hidden] {
+  display: none;
+}
+#authModal .auth-sub-links {
+  margin-top: 18px;
+}
+#authModal #authStepOtp,
+#authModal #authStep2fa,
+#authModal #authStepForgot,
+#authModal #authStepReset {
+  padding-bottom: 28px;
+}
+#authModal .auth-intro[hidden] {
+  display: none;
+}

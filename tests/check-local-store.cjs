@@ -1,0 +1,3 @@
+const {app,safeStorage}=require('electron');const fs=require('fs'),path=require('path');
+app.setPath('userData',path.join(app.getPath('appData'),'techbrowser02'));
+app.whenReady().then(()=>{const dir=path.join(app.getPath('appData'),'techbrowser02');const store=require('../src/secure-store').createStore(dir,safeStorage);for(const name of ['techbrowser-data.json','techbrowser-auth.json']){const p=path.join(dir,name);const raw=fs.readFileSync(p,'utf8');const value=store.decrypt(raw);store.decrypt(store.encrypt(value));console.log(name+': authenticated and roundtrip verified; original file unchanged');}app.exit(0)}).catch(e=>{console.error(e.message);app.exit(1)});

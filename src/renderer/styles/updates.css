@@ -1,0 +1,88 @@
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes slideDownFade {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(30px) scale(0.97);
+  }
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+#updateBanner {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 99999;
+  background: var(--sf);
+  border: 1px solid rgba(79, 140, 255, 0.35);
+  border-radius: 16px;
+  padding: 20px 22px 18px;
+  min-width: 330px;
+  max-width: 390px;
+  box-shadow:
+    0 12px 48px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(79, 140, 255, 0.08);
+  font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+  pointer-events: all;
+  backdrop-filter: blur(12px);
+}
+#updateBanner.show {
+  animation: slideUpFade 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+#updateBanner.hide {
+  animation: slideDownFade 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+#updateDownloadBtn,
+#updateInstallBtn {
+  position: relative;
+  z-index: 100000;
+  pointer-events: all;
+  transition:
+    opacity 0.15s,
+    transform 0.12s;
+}
+#updateDownloadBtn:hover:not(:disabled) {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+#updateDownloadBtn:active:not(:disabled) {
+  transform: translateY(0);
+}
+#updateInstallBtn:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+/* Changelog modal animasyonu */
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+#changelogInner {
+  animation: modalIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

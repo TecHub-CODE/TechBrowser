@@ -1,26 +1,44 @@
 {
   "name": "techbrowser02",
-  "version": "2.1.0",
-  "description": "TechBrowser02 - Modern Masaüstü Tarayıcı",
+  "version": "3.1.0",
+  "description": "TechBrowser - Windows-first open-source desktop browser",
   "main": "main.js",
-  "author": "TechBrowser Team",
+  "author": "TechHub Studio Inc.",
   "license": "MIT",
   "scripts": {
     "start": "electron .",
     "dev": "electron . --dev",
-    "build-win": "electron-builder --win",
+    "build-win": "node installer/build.cjs",
+    "build-win81": "node installer/build.cjs --win81",
     "build-mac": "electron-builder --mac",
-    "build-linux": "electron-builder --linux"
+    "build-linux": "electron-builder --linux",
+    "test": "node --test tests/*.test.js",
+    "test:integration": "node tests/run-electron.cjs integration",
+    "test:memory": "node tests/run-electron.cjs benchmark optimized-final",
+    "test:stress": "node tests/run-electron.cjs memory-stress stress-normal",
+    "preview:installer": "node installer/build.cjs --preview",
+    "test:storage": "node tests/run-electron.cjs storage-isolation",
+    "test:installer": "node tests/installer-smoke.cjs",
+    "test:auth-restart": "node tests/google-restart.cjs",
+    "format": "prettier --write main.js preload.js src cloudflare tests/*.test.js",
+    "format:check": "prettier --check main.js preload.js src cloudflare tests/*.test.js",
+    "test:worker": "npm --prefix tests/services run test:worker",
+    "test:rules": "npm --prefix tests/services run test:rules",
+    "test:packaged": "node tests/packaged-smoke.cjs",
+    "test:onboarding": "node tests/run-onboarding.cjs"
   },
   "dependencies": {
-    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.0",
-    "electron-updater": "^6.8.3",
-    "nodemailer": "^6.9.0"
+    "electron-updater": "^6.8.9",
+    "nodemailer": "^10.3.1",
+    "qrcode": "^1.5.4"
   },
   "devDependencies": {
-    "electron": "^28.0.0",
-    "electron-builder": "^24.0.0"
+    "electron": "44.10.1",
+    "electron-builder": "^26.18.0",
+    "jsqr": "^1.4.0",
+    "parse5": "^8.1.0",
+    "prettier": "^3.9.10"
   },
   "build": {
     "appId": "com.techbrowser.app",
@@ -31,20 +49,21 @@
       "repo": "TechBrowser"
     },
     "files": [
-      "**/*",
-      "!.git",
-      "!.gitignore",
-      "!techbrowser-users.json",
-      "!techbrowser-data.json",
-      "!techbrowser-otp.json",
-      "!dist/**",
-      "!*.md",
-      "!.env"
+      "main.js",
+      "preload.js",
+      "webview-preload.js",
+      "src/**/*",
+      "assets/**/*",
+      "LICENSE.txt",
+      "package.json",
+      "!**/.env",
+      "!**/.env.*",
+      "!**/*.env"
     ],
-    "extraResources": [
+    "extraFiles": [
       {
-        "from": ".env",
-        "to": ".env"
+        "from": "installer/generated/TechBrowser-Uninstall.exe",
+        "to": "TechBrowser-Uninstall.exe"
       }
     ],
     "win": {
@@ -61,7 +80,7 @@
     },
     "mac": {
       "target": "dmg",
-      "icon": "assets/icon.icns"
+      "icon": "assets/icon.png"
     },
     "linux": {
       "target": "AppImage",
@@ -69,20 +88,37 @@
     },
     "nsis": {
       "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "TechBrowser02",
+      "shortcutName": "TechBrowser",
       "installerIcon": "assets/icon.ico",
       "uninstallerIcon": "assets/icon.ico",
       "installerHeaderIcon": "assets/icon.ico",
+      "installerSidebar": "assets/installer-sidebar.bmp",
+      "license": "LICENSE.txt",
+      "artifactName": "TechBrowser-Setup-${version}.exe",
       "deleteAppDataOnUninstall": false,
       "runAfterFinish": true,
       "installerLanguages": [
         "tr_TR",
         "en_US"
       ],
-      "language": "1055"
+      "language": 1055,
+      "include": "installer/uninstaller.nsh",
+      "uninstallerSidebar": "assets/installer-sidebar.bmp"
     }
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "overrides": {
+    "@electron/asar": "^4.3.1",
+    "@electron/universal": "^3.0.6",
+    "ejs": "^7.0.2",
+    "minimatch@>=9": "^11.0.4",
+    "glob@>=10": "^14.0.3"
   }
 }

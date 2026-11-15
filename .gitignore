@@ -4,6 +4,8 @@
 
 # 🔒 Hassas dosyalar — ASLA commit etme
 .env
+.env.*
+!.env.example
 *.env
 
 # Kullanıcı verileri — local'de kalır
@@ -11,6 +13,11 @@ techbrowser-users.json
 techbrowser-data.json
 techbrowser-otp.json
 techbrowser-settings.json
+techbrowser-passwords.json
+techbrowser-auth.json
+techbrowser-ai-keys.json
+techbrowser-profiles.json
+.techbrowser_enc_key*
 
 # Build çıktıları
 dist/
@@ -36,3 +43,23 @@ desktop.ini
 *.njsproj
 *.sln
 .env 
+
+# Disposable automated test profiles
+tests/.runtime/
+cloudflare/.dev.vars
+cloudflare/.wrangler/
+.firebase/
+firebase-debug.log
+firestore-debug.log
+
+# Generated binaries and local verification evidence
+installer/generated/
+tests/results/
+
+# Separate workspaces and private project notes
+chromium-port/
+github-profile/
+DUZELTME-RAPORU.md
+TEST-REPORT.md
+FIREBASE-SETUP.md
+SECURITY-SETUP.md

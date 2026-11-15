@@ -1,0 +1,23 @@
+// Merge this match into your existing /databases/{database}/documents block.
+// Do not replace rules used by other parts of the project.
+match /browserSync/{uid} {
+  function ownsWithTotp() {
+    return request.auth != null
+      && request.auth.uid == uid
+      && request.auth.token.email_verified == true
+      && request.auth.token.firebase.sign_in_second_factor == 'totp';
+  }
+  allow read: if ownsWithTotp();
+  // A verified account may remove its own sync document after a recent login,
+  // even if it has never enrolled in TOTP. This grants no read/write access.
+  allow delete: if request.auth != null
+    && request.auth.uid == uid
+    && request.auth.token.email_verified == true
+    && request.auth.token.auth_time is int
+    && request.auth.token.auth_time * 1000 <= request.time.toMillis()
+    && request.time.toMillis() - request.auth.token.auth_time * 1000 < 300000;
+  allow create, update: if ownsWithTotp()
+    && request.resource.data.keys().hasOnly(['bookmarks'])
+    && request.resource.data.bookmarks is string
+    && request.resource.data.bookmarks.size() <= 131072;
+}

@@ -1,0 +1,213 @@
+#aiPanel {
+  width: min(440px, 100%);
+  background: var(--bg) !important;
+  box-shadow: -12px 0 36px #0002;
+}
+#aiPanel .ai-panel-head {
+  padding: 18px 20px;
+  gap: 10px;
+  border-bottom: 1px solid var(--bd2);
+}
+#aiPanel .ai-panel-head h3 {
+  font-size: 16px;
+  font-weight: 550;
+}
+#aiPanel .ai-dot {
+  display: flex;
+  color: var(--tx);
+  background: none;
+}
+#aiPanel .ai-dot svg {
+  width: 24px;
+  height: 24px;
+}
+#aiBtn > svg {
+  fill: none;
+}
+#aiPanel .ai-model-select {
+  max-width: 160px;
+  font-size: 11px;
+  background: var(--sf);
+}
+#aiPanel .ai-key-hint {
+  padding: 10px 20px;
+  color: var(--tx3);
+  font-size: 10px;
+  line-height: 1.6;
+}
+.misket-actions-context {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 20px 14px;
+}
+.misket-actions-context button {
+  border: 1px solid var(--bd2);
+  border-radius: 7px;
+  background: var(--sf);
+  color: var(--tx2);
+  padding: 8px 10px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.misket-actions-context small {
+  width: 100%;
+  color: var(--tx3);
+  font-size: 10px;
+  line-height: 1.5;
+}
+#aiPanel .ai-messages {
+  padding: 20px;
+}
+#aiPanel .ai-welcome {
+  margin: auto 0;
+  padding: 22px 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+#aiPanel .ai-welcome h2 {
+  font-size: 20px;
+  font-weight: 550;
+  letter-spacing: -0.5px;
+  margin: 22px 0 10px;
+  color: var(--tx);
+}
+#aiPanel .ai-welcome p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--tx2);
+  max-width: 280px;
+  margin: auto;
+}
+#aiMisketHome {
+  display: flex;
+  justify-content: center;
+}
+.misket-chat-character {
+  width: 132px;
+  height: 132px;
+  flex-shrink: 0;
+}
+.misket-chat-badge {
+  position: absolute;
+  left: 34%;
+  top: 61%;
+  width: 32%;
+  height: 25%;
+  object-fit: contain;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  filter: none !important;
+}
+#aiPanel .ai-input-bar {
+  position: relative;
+  isolation: isolate;
+  margin: 12px 16px 16px;
+  padding: 14px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background:
+    linear-gradient(var(--sf), var(--sf)) padding-box,
+    linear-gradient(130deg, #a78bfa66, #7dd3fc66, #e8b4d466) border-box;
+  flex-shrink: 0;
+}
+#aiPanel .ai-input-bar:focus-within {
+  box-shadow: 0 0 20px #a78bfa12;
+}
+#aiMisketDock:empty {
+  display: none;
+}
+#aiMisketDock .misket-chat-character {
+  width: 52px;
+  height: 52px;
+}
+.ai-compose-main {
+  flex: 1;
+  min-width: 0;
+}
+#aiPanel #aiInput {
+  width: 100%;
+  min-height: 74px;
+  max-height: 120px;
+  resize: none;
+  border: 0;
+  outline: none;
+  background: transparent;
+  padding: 2px 0;
+  box-shadow: none;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.ai-compose-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+}
+#aiComposeStatus {
+  font-size: 10px;
+  color: var(--tx3);
+}
+#aiPanel .ai-send-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--tx);
+  color: var(--bg);
+  box-shadow: none;
+  flex-shrink: 0;
+}
+#aiPanel .ai-send-btn:disabled {
+  opacity: 0.35;
+}
+#aiPanel.ai-busy .ai-send-btn svg {
+  display: none;
+}
+#aiPanel.ai-busy .ai-send-btn::after {
+  content: '';
+  width: 13px;
+  height: 13px;
+  border: 1.5px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: misket-send-spin 0.8s linear infinite;
+}
+#aiPanel:not(.on) *,
+#aiPanel.chat-suspended * {
+  animation-play-state: paused !important;
+}
+#aiPanel .ai-msg {
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+#aiPanel .ai-msg.assistant {
+  background: none;
+  border: 0;
+  padding: 12px 0;
+}
+#aiPanel .ai-msg.user {
+  color: var(--tx);
+  background: var(--sf2);
+  border: 1px solid var(--bd2);
+}
+#aiPanel .ai-model-tag {
+  color: var(--tx2) !important;
+  font-size: 10px;
+  letter-spacing: 0;
+}
+@keyframes misket-send-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #aiPanel * {
+    animation: none !important;
+  }
+}
