@@ -2,6 +2,8 @@ const { app, BrowserWindow, ipcMain, session, shell, dialog, safeStorage } = req
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
+const { installRuntimeCompat } = require('./src/runtime-compat');
+installRuntimeCompat();
 const { browserSessions, installPermissions, setBrowserProxy } = require('./src/session-policy');
 const { importBrowserData } = require('./src/browser-import');
 
