@@ -3,7 +3,15 @@
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { DatabaseSync } = require('node:sqlite');
+
+// node:sqlite is only available in newer Node/Electron releases. Electron 22,
+// which is used by the Windows 8.1 compatibility build, does not provide it.
+// Load it lazily so an optional history import never prevents the browser from
+// starting. Bookmark import remains available on legacy systems.
+let DatabaseSync = null;
+try {
+  ({ DatabaseSync } = require('node:sqlite'));
+} catch {}
 
 const MAX_ITEMS = 200;
 
@@ -53,6 +61,7 @@ function chromiumTime(value) {
 }
 
 function readHistory(profilePath) {
+  if (!DatabaseSync) return [];
   const source = path.join(profilePath, 'History');
   if (!fs.existsSync(source)) return [];
   const temporary = path.join(
