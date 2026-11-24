@@ -177,6 +177,16 @@ function applyNavigationGuard(webContents) {
 let mainWindow;
 const guestContents = new Map();
 let siteSettings = { adBlock: true, spellcheck: true, notifications: false };
+
+function configureSpellChecker(targetSession, enabled = true) {
+  targetSession.setSpellCheckerEnabled(enabled);
+  if (!enabled) return;
+  const available = targetSession.availableSpellCheckerLanguages || [];
+  const preferred = ['tr']
+    .map((wanted) => available.find((language) => language.toLowerCase() === wanted.toLowerCase()))
+    .filter(Boolean);
+  if (preferred.length) targetSession.setSpellCheckerLanguages(preferred);
+}
 const originalHandle = ipcMain.handle.bind(ipcMain);
 ipcMain.handle = (channel, handler) =>
   originalHandle(channel, (event, ...args) => {
@@ -405,6 +415,8 @@ app.whenReady().then(async () => {
   // VPN proxy kalıntısı kalmasın — uygulama her açılışta direkt bağlantıyla başlar
   await setBrowserProxy(session, { mode: 'direct' });
 
+  browserSessions(session).forEach((s) => configureSpellChecker(s, siteSettings.spellcheck));
+
   createWindow();
 
   browserSessions(session).forEach((s) =>
@@ -432,7 +444,7 @@ app.whenReady().then(async () => {
       spellcheck: value.spellcheck !== false,
       notifications: value.notifications === true,
     };
-    browserSessions(session).forEach((s) => s.setSpellCheckerEnabled(siteSettings.spellcheck));
+    browserSessions(session).forEach((s) => configureSpellChecker(s, siteSettings.spellcheck));
     return { success: true };
   });
   ipcMain.handle('can-suspend-tab', (_, id) => {
@@ -668,6 +680,40 @@ ipcMain.handle('open-google-auth', async (_, options = {}) => {
     return { success: false, error: error.message };
   } finally {
     activeAccountRequests--;
+  }
+});
+
+const spellingSuggestionCache = new Map();
+ipcMain.handle('search-spelling-suggestions', async (_, payload = {}) => {
+  const query = typeof payload.query === 'string' ? payload.query.trim() : '';
+  const engine = ['google', 'bing', 'duck'].includes(payload.engine) ? payload.engine : 'google';
+  if (!/^[\p{L}'-]{3,48}$/u.test(query)) return [];
+  const cacheKey = engine + ':' + query.toLocaleLowerCase('tr-TR');
+  const cached = spellingSuggestionCache.get(cacheKey);
+  if (cached && Date.now() - cached.time < 10 * 60 * 1000) return cached.items;
+  const encoded = encodeURIComponent(query);
+  const urls = {
+    google: `https://suggestqueries.google.com/complete/search?client=firefox&hl=tr&q=${encoded}`,
+    bing: `https://api.bing.com/osjson.aspx?query=${encoded}`,
+    duck: `https://duckduckgo.com/ac/?q=${encoded}&type=list`,
+  };
+  try {
+    const response = await fetch(urls[engine], {
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(2500),
+      redirect: 'error',
+    });
+    if (!response.ok) return [];
+    const data = await response.json();
+    const items = Array.isArray(data?.[1])
+      ? data[1].filter((item) => typeof item === 'string').slice(0, 10)
+      : [];
+    spellingSuggestionCache.set(cacheKey, { time: Date.now(), items });
+    if (spellingSuggestionCache.size > 128)
+      spellingSuggestionCache.delete(spellingSuggestionCache.keys().next().value);
+    return items;
+  } catch {
+    return [];
   }
 });
 

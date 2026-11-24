@@ -1013,9 +1013,18 @@
                 class="nt-input"
                 id="ntInput"
                 placeholder="Web’de ara veya bir adres yaz"
+                spellcheck="false"
+                autocomplete="off"
                 data-ui="ui-39"
               />
               <button class="nt-btn" data-ui="ui-40">Ara</button>
+            </div>
+            <div class="spell-hint" id="ntSpellHint" hidden aria-live="polite">
+              <span class="spell-hint-copy">
+                <small>Yazım önerisi</small>
+                <strong id="ntSpellText"></strong>
+              </span>
+              <kbd><span>Tab</span><b>↹</b></kbd>
             </div>
           </div>
           <div class="nt-actions">

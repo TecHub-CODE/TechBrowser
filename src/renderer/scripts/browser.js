@@ -301,28 +301,155 @@ var SUGS = [
   'twitch.tv',
 ];
 
-function showSug(v) {
-  if (!v || v.length < 2 || v.startsWith('techbrowser://')) {
-    hideSug();
-    return;
+var addrSpellCorrection = null;
+var newTabSpellCorrection = null;
+var addrSpellTimer = null;
+var newTabSpellTimer = null;
+var addrSpellRequest = 0;
+var newTabSpellRequest = 0;
+var COMMON_TURKISH_TYPOS = {
+  yanlıs: 'yanlış',
+  yanlis: 'yanlış',
+  yanlız: 'yalnız',
+  yanliz: 'yalnız',
+  bisey: 'bir şey',
+  'bişey': 'bir şey',
+  'birşey': 'bir şey',
+  'herşey': 'her şey',
+  'hicbir': 'hiçbir',
+  'hiç bir': 'hiçbir',
+};
+
+function spellingWord(text) {
+  var value = String(text || '');
+  if (!value.trim() || (!value.includes(' ') && /[:/@.]/.test(value))) return null;
+  var match = value.match(/[\p{L}ÇĞİÖŞÜçğıöşü'-]{2,}$/u);
+  return match ? { value: value, word: match[0], index: match.index } : null;
+}
+
+function buildSpellingCorrection(parts, suggestion) {
+  if (!parts || !suggestion) return null;
+  suggestion = String(suggestion).trim();
+  if (/^[A-ZÇĞİÖŞÜ]/.test(parts.word))
+    suggestion = suggestion.charAt(0).toLocaleUpperCase('tr-TR') + suggestion.slice(1);
+  return {
+    word: parts.word,
+    suggestion: suggestion,
+    text: parts.value.slice(0, parts.index) + suggestion,
+  };
+}
+
+function getSpellingCorrection(text) {
+  if (
+    cfg.spellcheck === false ||
+    !window.electronAPI ||
+    typeof window.electronAPI.spellingSuggestions !== 'function'
+  )
+    return null;
+  var parts = spellingWord(text);
+  if (!parts) return null;
+  var common = COMMON_TURKISH_TYPOS[parts.word.toLocaleLowerCase('tr-TR')];
+  if (common) return buildSpellingCorrection(parts, common);
+  var suggestions = window.electronAPI.spellingSuggestions(parts.word);
+  if (!Array.isArray(suggestions) || !suggestions.length) return null;
+  var suggestion = suggestions.find(function (item) {
+    return String(item).toLocaleLowerCase('tr-TR') !== parts.word.toLocaleLowerCase('tr-TR');
+  });
+  return buildSpellingCorrection(parts, suggestion);
+}
+
+function spellingDistance(a, b) {
+  a = a.toLocaleLowerCase('tr-TR');
+  b = b.toLocaleLowerCase('tr-TR');
+  var row = Array.from({ length: b.length + 1 }, (_, index) => index);
+  for (var i = 1; i <= a.length; i++) {
+    var next = [i];
+    for (var j = 1; j <= b.length; j++)
+      next[j] = Math.min(next[j - 1] + 1, row[j] + 1, row[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    row = next;
   }
+  return row[b.length];
+}
+
+function remoteSpellingCorrection(text, suggestions) {
+  var parts = spellingWord(text);
+  if (!parts || !Array.isArray(suggestions)) return null;
+  var original = parts.word.toLocaleLowerCase('tr-TR');
+  var candidates = suggestions
+    .map((item) => String(item).trim())
+    .filter((item) => /^[\p{L}ÇĞİÖŞÜçğıöşü'-]+$/u.test(item))
+    .map((item) => ({ item: item, distance: spellingDistance(original, item) }))
+    .filter((entry) => entry.distance > 0 && entry.distance <= (original.length > 6 ? 2 : 1))
+    .sort((a, b) => a.distance - b.distance || a.item.length - b.item.length);
+  return buildSpellingCorrection(parts, candidates[0]?.item);
+}
+
+function renderAddressSuggestions(v) {
   var m = SUGS.filter((s) => s.includes(v.toLowerCase())).slice(0, 5);
   var el = document.getElementById('suggestions');
-  if (!m.length) {
+  if (!m.length && !addrSpellCorrection) {
     hideSug();
     return;
   }
-  el.innerHTML = m
-    .map(
+  var rows = [];
+  if (addrSpellCorrection)
+    rows.push(
+      '<div class="sug-item spell-suggestion" data-spell-correction="' +
+        encodeURIComponent(addrSpellCorrection.text) +
+        '"><span class="sug-spell-copy"><small>Yazım önerisi</small><strong>' +
+        escHtml(addrSpellCorrection.suggestion) +
+        '</strong></span><kbd><span>Tab</span><b>↹</b></kbd></div>',
+    );
+  rows.push.apply(
+    rows,
+    m.map(
       (s) =>
-        '<div class="sug-item" onmousedown="doNavigate(\'https://' +
-        s +
-        '\')"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
-        s +
+        '<div class="sug-item" data-suggestion-url="' +
+        encodeURIComponent('https://' + s) +
+        '"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
+        escHtml(s) +
         '</div>',
-    )
-    .join('');
+    ),
+  );
+  el.innerHTML = rows.join('');
   el.classList.add('on');
+}
+
+function requestAddressSpelling(v) {
+  clearTimeout(addrSpellTimer);
+  var request = ++addrSpellRequest;
+  if (
+    cfg.spellcheck === false ||
+    addrSpellCorrection ||
+    incognito ||
+    cfg.searchEngine === 'yandex' ||
+    typeof window.electronAPI?.searchSpellingSuggestions !== 'function'
+  )
+    return;
+  var parts = spellingWord(v);
+  if (!parts || parts.word.length < 3) return;
+  addrSpellTimer = setTimeout(function () {
+    window.electronAPI
+      .searchSpellingSuggestions({ query: parts.word, engine: cfg.searchEngine })
+      .then(function (suggestions) {
+        if (request !== addrSpellRequest || document.getElementById('addr').value !== v) return;
+        addrSpellCorrection = remoteSpellingCorrection(v, suggestions);
+        renderAddressSuggestions(v);
+      })
+      .catch(function () {});
+  }, 240);
+}
+
+function showSug(v) {
+  if (!v || v.length < 2 || v.startsWith('techbrowser://')) {
+    addrSpellCorrection = null;
+    clearTimeout(addrSpellTimer);
+    hideSug();
+    return;
+  }
+  addrSpellCorrection = getSpellingCorrection(v);
+  renderAddressSuggestions(v);
+  requestAddressSpelling(v);
 }
 function hideSug() {
   document.getElementById('suggestions').classList.remove('on');
@@ -331,6 +458,14 @@ function updateSeBadge() {
   document.getElementById('seBadge').textContent = (SE[cfg.searchEngine] || SE.google).badge;
 }
 function handleAddr(e) {
+  if (e.key === 'Tab' && addrSpellCorrection) {
+    e.preventDefault();
+    e.target.value = addrSpellCorrection.text;
+    e.target.setSelectionRange(e.target.value.length, e.target.value.length);
+    addrSpellCorrection = null;
+    hideSug();
+    return;
+  }
   if (e.key === 'Enter') {
     hideSug();
     doNavigate(e.target.value);
@@ -341,14 +476,84 @@ function handleAddr(e) {
     e.target.blur();
   }
 }
+function updateNewTabSpellSuggestion() {
+  var input = document.getElementById('ntInput');
+  var hint = document.getElementById('ntSpellHint');
+  var value = input.value;
+  clearTimeout(newTabSpellTimer);
+  var request = ++newTabSpellRequest;
+  newTabSpellCorrection = getSpellingCorrection(input.value);
+  if (!newTabSpellCorrection) {
+    hint.hidden = true;
+    document.getElementById('ntSpellText').textContent = '';
+    var parts = spellingWord(value);
+    if (
+      cfg.spellcheck === false ||
+      !parts ||
+      parts.word.length < 3 ||
+      incognito ||
+      cfg.searchEngine === 'yandex' ||
+      typeof window.electronAPI?.searchSpellingSuggestions !== 'function'
+    )
+      return;
+    newTabSpellTimer = setTimeout(function () {
+      window.electronAPI
+        .searchSpellingSuggestions({ query: parts.word, engine: cfg.searchEngine })
+        .then(function (suggestions) {
+          if (request !== newTabSpellRequest || input.value !== value) return;
+          newTabSpellCorrection = remoteSpellingCorrection(value, suggestions);
+          if (!newTabSpellCorrection) return;
+          document.getElementById('ntSpellText').textContent = newTabSpellCorrection.suggestion;
+          hint.hidden = false;
+        })
+        .catch(function () {});
+    }, 240);
+    return;
+  }
+  document.getElementById('ntSpellText').textContent = newTabSpellCorrection.suggestion;
+  hint.hidden = false;
+}
+function handleNewTabSearchKey(e) {
+  if (e.key === 'Tab' && newTabSpellCorrection) {
+    e.preventDefault();
+    e.target.value = newTabSpellCorrection.text;
+    e.target.setSelectionRange(e.target.value.length, e.target.value.length);
+    newTabSpellCorrection = null;
+    document.getElementById('ntSpellHint').hidden = true;
+    return;
+  }
+  if (e.key === 'Enter') doSearch();
+}
 function doSearch() {
   var v = document.getElementById('ntInput').value.trim();
   document.getElementById('ntInput').value = '';
+  newTabSpellCorrection = null;
+  document.getElementById('ntSpellHint').hidden = true;
   document.getElementById('ntInput').blur();
   if (v) {
     doNavigate(v);
   }
 }
+
+document.getElementById('suggestions').addEventListener('mousedown', function (event) {
+  var correction = event.target.closest('[data-spell-correction]');
+  if (correction) {
+    event.preventDefault();
+    var address = document.getElementById('addr');
+    address.value = decodeURIComponent(correction.dataset.spellCorrection);
+    address.focus();
+    address.setSelectionRange(address.value.length, address.value.length);
+    addrSpellCorrection = null;
+    hideSug();
+    return;
+  }
+  var suggestion = event.target.closest('[data-suggestion-url]');
+  if (suggestion) {
+    event.preventDefault();
+    doNavigate(decodeURIComponent(suggestion.dataset.suggestionUrl));
+  }
+});
+document.getElementById('ntInput').addEventListener('input', updateNewTabSpellSuggestion);
 
 function doNavigate(raw) {
   if (!raw || !raw.trim()) return;

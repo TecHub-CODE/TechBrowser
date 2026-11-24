@@ -335,7 +335,7 @@
       'ui-39',
       'keydown',
       function (event) {
-        if (event.key === 'Enter') doSearch();
+        handleNewTabSearchKey(event);
       },
     ],
     [

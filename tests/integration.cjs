@@ -138,6 +138,27 @@ app
       );
       await evaluate('closeAllModals()');
     });
+    await test('search typo hint appears below the field and Tab accepts the correction', async () => {
+      await evaluate(
+        "showNewTab();var input=document.getElementById('ntInput');input.value='yanlıs';input.dispatchEvent(new Event('input',{bubbles:true}));true;",
+      );
+      assert.equal(await evaluate("document.getElementById('ntSpellHint').hidden"), false);
+      assert.equal(await evaluate("document.getElementById('ntSpellText').textContent"), 'yanlış');
+      assert.match(await evaluate("document.getElementById('ntSpellHint').textContent"), /Tab/);
+      await evaluate(
+        "document.getElementById('ntInput').dispatchEvent(new KeyboardEvent('keydown',{key:'Tab',bubbles:true,cancelable:true}));true;",
+      );
+      assert.equal(await evaluate("document.getElementById('ntInput').value"), 'yanlış');
+
+      await evaluate(
+        "var address=document.getElementById('addr');address.value='yanlıs';address.dispatchEvent(new Event('input',{bubbles:true}));true;",
+      );
+      assert.match(await evaluate("document.getElementById('suggestions').textContent"), /yanlış/);
+      await evaluate(
+        "document.getElementById('addr').dispatchEvent(new KeyboardEvent('keydown',{key:'Tab',bubbles:true,cancelable:true}));true;",
+      );
+      assert.equal(await evaluate("document.getElementById('addr').value"), 'yanlış');
+    });
     await test('settings toggles reach browser sessions and persist', async () => {
       await evaluate(
         "openPanel('settings');window.__testToggle=document.createElement('button');toggleCfg('spellcheck',window.__testToggle,'Yazım denetimi')",

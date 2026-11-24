@@ -1,6 +1,6 @@
 'use strict';
 
-const { contextBridge, ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer, webFrame } = require('electron');
 
 // ══════════════════════════════════════════
 //  TECHBROWSER02 PRELOAD — v2.8.0
@@ -54,6 +54,7 @@ const ALLOWED_INVOKE = [
   'check-for-updates',
   'clear-browsing-data',
   'clear-incognito-data',
+  'search-spelling-suggestions',
   // ── v2.7.0 ──
   'get-app-version',
   'speedtest-run',
@@ -107,6 +108,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Veri
   saveData: (data) => ipcRenderer.invoke('save-data', data),
   loadData: () => ipcRenderer.invoke('load-data'),
+
+  // Chromium'un yerel sözlüğü; yazılan metin veya öneriler dışarı gönderilmez.
+  spellingSuggestions: (word) => {
+    if (typeof word !== 'string' || word.length < 2 || word.length > 64) return [];
+    if (!webFrame.isWordMisspelled(word)) return [];
+    return webFrame.getWordSuggestions(word).slice(0, 3);
+  },
+  searchSpellingSuggestions: (payload) =>
+    ipcRenderer.invoke('search-spelling-suggestions', payload),
 
   // Şifre yöneticisi (main'de şifreli saklanır)
   savePasswords: (list) => ipcRenderer.invoke('passwords-save', list),

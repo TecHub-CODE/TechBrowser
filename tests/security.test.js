@@ -146,6 +146,16 @@ test('packaged account services use public configuration without bundling OAuth 
   assert.doesNotMatch(JSON.stringify(config), /GOOGLE_CLIENT_SECRET|client_secret/i);
   assert.match(main, /if \(updateDownloadActive\)[\s\S]{0,100}send\('update-error'/);
 });
+test('search spelling suggestions use fixed providers and stay disabled in private browsing', () => {
+  const main = fs.readFileSync('main.js', 'utf8');
+  const browser = fs.readFileSync('src/renderer/scripts/browser.js', 'utf8');
+  assert.match(main, /suggestqueries\.google\.com\/complete\/search/);
+  assert.match(main, /api\.bing\.com\/osjson\.aspx/);
+  assert.match(main, /duckduckgo\.com\/ac\//);
+  assert.match(main, /\^\[\\p\{L\}'-\]\{3,48\}\$/);
+  assert.match(browser, /incognito[\s\S]{0,120}searchSpellingSuggestions/);
+  assert.match(browser, /cfg\.spellcheck === false[\s\S]{0,180}searchSpellingSuggestions/);
+});
 test('application scripts parse and removed session helpers are not referenced', () => {
   for (const file of ['main.js', 'preload.js', 'webview-preload.js'])
     new vm.Script(fs.readFileSync(file, 'utf8'));
