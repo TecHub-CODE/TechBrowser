@@ -3,7 +3,7 @@
   <h1>TechBrowser</h1>
   <p>A Windows-first, open-source desktop browser by TechHub Studio.</p>
 
-  [![Version](https://img.shields.io/badge/version-3.1.2-7c83ff)](https://github.com/TecHub-CODE/TechBrowser/releases)
+  [![Version](https://img.shields.io/badge/version-3.1.3-7c83ff)](https://github.com/TecHub-CODE/TechBrowser/releases)
   [![License](https://img.shields.io/badge/license-MIT-58d6ff)](LICENSE.txt)
   [![Electron](https://img.shields.io/badge/Electron-44-121722?logo=electron)](https://www.electronjs.org/)
 </div>

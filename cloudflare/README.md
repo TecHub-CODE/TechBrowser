@@ -1,8 +1,10 @@
 # TechBrowser hizmet sunucusu
 
-Durum: Kod ve masaüstü bağlantısı hazır; canlı adres yok, dağıtım yapılmadı.
-`src/service-config.json` bilinçli olarak boş adres içerir. Hesap/alan adı veya
-gizli anahtar uydurulmamıştır. Aşağıdaki adımlar proje sahibinin hesaplarında uygulanır.
+Durum: Hizmet `https://techbrowser-api.yigiitxp.workers.dev` adresinde yayında
+ve masaüstü uygulaması bu adrese bağlıdır. `src/service-config.json` yalnızca
+herkese açık HTTPS adresini ve gizli olmayan Google istemci kimliğini içerir.
+Sağlayıcı anahtarları ile OAuth istemci gizli anahtarı Cloudflare'ın şifreli
+üretim değişkenlerinde tutulur.
 
 ## Sunucunun sundukları
 
@@ -19,7 +21,7 @@ Google kod değişimi giriş öncesinde çalışır; diğer POST yolları Fireba
 oturumunu ve doğrulanmış e-postayı denetler. Bütün POST yollarında IP sınırı
 vardır. İstek gövdesi en fazla 32 KB'dır. Kod kayıtları Durable Objects içinde
 özet olarak tutulur; başarılı doğrulamada silinir, süresi dolunca temizlenir.
-Firebase oturum anahtarları bu kayıtlarda tutulmaz. Kod denetimi hem birim testlerinde hem gerçek workerd motorunda SQLite Durable Objects ile denendi. Yeniden başlatma, eşzamanlı çift doğrulama ve süresi dolmuş kod kontrolü geçti. Çalıştırma adımları tests/services/README.md içindedir. Sağlayıcı yanıtları testte taklit edilir; canlı dağıtım henüz yapılmadı.
+Firebase oturum anahtarları bu kayıtlarda tutulmaz. Kod denetimi hem birim testlerinde hem gerçek workerd motorunda SQLite Durable Objects ile denendi. Yeniden başlatma, eşzamanlı çift doğrulama ve süresi dolmuş kod kontrolü geçti. Çalıştırma adımları tests/services/README.md içindedir. Sağlayıcı yanıtları otomatik testlerde taklit edilir; üretim yapılandırması canlı uç noktada ayrıca doğrulanır.
 
 ## Gerekli hesap ayarları
 

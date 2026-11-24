@@ -125,7 +125,8 @@ function createGoogleSignIn({
           timer = setTimeout(() => finish(Error('Google girişinin süresi doldu.')), 300000);
           try {
             await openExternal('https://accounts.google.com/o/oauth2/v2/auth?' + params);
-          } catch {
+          } catch (error) {
+            console.warn('[GoogleAuth] Sistem tarayıcısı açılamadı:', error?.message || error);
             finish(Error('Sistem tarayıcısı açılamadı.'));
           }
         });

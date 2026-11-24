@@ -1,6 +1,6 @@
 {
-  "apiBaseUrl": "",
-  "googleClientId": "",
+  "apiBaseUrl": "https://techbrowser-api.yigiitxp.workers.dev",
+  "googleClientId": "375096042395-6v3qtbp92e2oeflj95n493p5m1kr5042.apps.googleusercontent.com",
   "firebaseSyncEnabled": false,
   "aiBaseUrl": "https://techbrowser-api.yigiitxp.workers.dev"
 }

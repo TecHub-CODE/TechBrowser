@@ -33,6 +33,7 @@ if (performanceModeActive) {
 
 // Auto-updater (electron-updater paketi gerekli: npm install electron-updater)
 let autoUpdater;
+let updateDownloadActive = false;
 try {
   const windowsKernelMajor = process.platform === 'win32' ? Number(os.release().split('.')[0]) : 10;
   const legacyWindows = process.platform === 'win32' && windowsKernelMajor < 10;
@@ -607,6 +608,7 @@ app.whenReady().then(async () => {
       mainWindow.webContents.send('update-progress', prog);
     });
     autoUpdater.on('update-downloaded', (info) => {
+      updateDownloadActive = false;
       // Release notes'u kaydet — sonraki açılışta gösterilecek
       let s = {};
       try {
@@ -620,7 +622,11 @@ app.whenReady().then(async () => {
     });
     autoUpdater.on('error', (err) => {
       console.error('[AutoUpdater Hata]', err.message);
-      mainWindow.webContents.send('update-error', { message: err.message });
+      // Ağ/yayın hataları açılıştaki sessiz kontrolde kullanıcıyı rahatsız etmez.
+      // Yalnızca kullanıcının başlattığı indirme başarısızsa görünür hata gönderilir.
+      if (updateDownloadActive)
+        mainWindow.webContents.send('update-error', { message: err.message });
+      updateDownloadActive = false;
     });
 
     // Güncelleme kontrolü — 5 sn sonra başlat, sonra her 2 saatte bir
@@ -752,9 +758,11 @@ ipcMain.handle('complete-onboarding', (_, payload = {}) => {
 ipcMain.handle('download-update', async () => {
   if (!autoUpdater) return { success: false, error: 'AutoUpdater yüklü değil.' };
   try {
+    updateDownloadActive = true;
     await autoUpdater.downloadUpdate();
     return { success: true };
   } catch (e) {
+    updateDownloadActive = false;
     console.error('[AutoUpdater] İndirme hatası:', e.message);
     return { success: false, error: e.message };
   }

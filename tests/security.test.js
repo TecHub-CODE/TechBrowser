@@ -136,6 +136,16 @@ test('package excludes environment secrets and contains no extra resource copy',
   }
   assert.equal(config.extraResources, undefined);
 });
+
+test('packaged account services use public configuration without bundling OAuth secrets', () => {
+  const config = require('../src/service-config.json');
+  const main = fs.readFileSync('main.js', 'utf8');
+  assert.equal(config.apiBaseUrl, 'https://techbrowser-api.yigiitxp.workers.dev');
+  assert.match(config.googleClientId, /^[\w.-]+\.apps\.googleusercontent\.com$/);
+  assert.equal('googleClientSecret' in config, false);
+  assert.doesNotMatch(JSON.stringify(config), /GOOGLE_CLIENT_SECRET|client_secret/i);
+  assert.match(main, /if \(updateDownloadActive\)[\s\S]{0,100}send\('update-error'/);
+});
 test('application scripts parse and removed session helpers are not referenced', () => {
   for (const file of ['main.js', 'preload.js', 'webview-preload.js'])
     new vm.Script(fs.readFileSync(file, 'utf8'));

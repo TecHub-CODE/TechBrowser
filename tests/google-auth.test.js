@@ -1,6 +1,23 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
+const http = require('node:http');
 const { createGoogleSignIn } = require('../src/google-auth');
+
+function requestLoopback(url) {
+  return new Promise((resolve, reject) => {
+    const request = http.get(url, (response) => {
+      const chunks = [];
+      response.on('data', (chunk) => chunks.push(chunk));
+      response.on('end', () =>
+        resolve({
+          status: response.statusCode,
+          text: () => Promise.resolve(Buffer.concat(chunks).toString('utf8')),
+        }),
+      );
+    });
+    request.on('error', reject);
+  });
+}
 
 test('Google ignores forged callbacks, uses PKCE and reports success only after authentication', async () => {
   let callbackDone;
@@ -28,9 +45,9 @@ test('Google ignores forged callbacks, uses PKCE and reports success only after 
         redirect.hostname = '127.0.0.1';
         redirect.searchParams.set('code', 'synthetic-code');
         redirect.searchParams.set('state', 'forged');
-        assert.equal((await fetch(redirect)).status, 400);
+        assert.equal((await requestLoopback(redirect)).status, 400);
         redirect.searchParams.set('state', auth.searchParams.get('state'));
-        const response = await fetch(redirect);
+        const response = await requestLoopback(redirect);
         assert.equal(response.status, 200);
         assert.match(await response.text(), /Giriş tamamlandı/);
         callbackDone();
@@ -62,7 +79,7 @@ test('failed Google verification never displays a success page', async () => {
         redirect.hostname = '127.0.0.1';
         redirect.searchParams.set('code', 'code');
         redirect.searchParams.set('state', auth.searchParams.get('state'));
-        const response = await fetch(redirect);
+        const response = await requestLoopback(redirect);
         assert.equal(response.status, 401);
         const html = await response.text();
         assert.match(html, /Giriş tamamlanamadı/);
