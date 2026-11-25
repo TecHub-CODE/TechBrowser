@@ -43,6 +43,7 @@
   "build": {
     "appId": "com.techbrowser.app",
     "productName": "TechBrowser02",
+    "asarUnpack": ["installer/generated/voice-search/**/*"],
     "publish": {
       "provider": "github",
       "owner": "TecHub-CODE",
@@ -54,6 +55,12 @@
       "webview-preload.js",
       "src/**/*",
       "assets/**/*",
+      "installer/assets/voice/Browser*.wav",
+      "installer/generated/voice-search/model-base.bin",
+      "installer/generated/voice-search/LICENSE",
+      "installer/generated/voice-search/Release/whisper-cli.exe",
+      "installer/generated/voice-search/Release/whisper.dll",
+      "installer/generated/voice-search/Release/ggml*.dll",
       "LICENSE.txt",
       "package.json",
       "!**/.env",

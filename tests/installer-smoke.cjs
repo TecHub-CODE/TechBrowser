@@ -7,8 +7,18 @@ run(csc,['/nologo','/target:winexe','/win32manifest:'+path.join(root,'installer/
 const hashFile=path.join(dir,'hash');fs.writeFileSync(hashFile,crypto.createHash('sha256').update(fs.readFileSync(payload)).digest('hex'));
 const exe=path.join(dir,'verify.exe');const args=['/nologo','/define:TESTING','/target:winexe','/win32manifest:'+path.join(root,'installer/app.manifest.xml'),'/out:'+exe,'/reference:'+path.join(fw,'WPF/PresentationFramework.dll'),'/reference:'+path.join(fw,'WPF/PresentationCore.dll'),'/reference:'+path.join(fw,'WPF/WindowsBase.dll'),'/reference:System.Xaml.dll','/reference:System.Windows.Forms.dll','/reference:System.Core.dll','/reference:System.IO.Compression.dll','/reference:System.IO.Compression.FileSystem.dll'];
 for(const [file,name] of [['installer/Window.xaml','window.xaml'],['installer/assets/glass.png','glass.png'],['installer/assets/browser.png','browser.png'],['installer/assets/studio.png','studio.png'],['installer/assets/setupintro-frames.zip','setupintro-frames.zip'],['LICENSE.txt','license.txt']])args.push('/resource:'+path.join(root,file)+','+name);
+const voiceDir = path.join(root, 'installer/assets/voice');
+for (const name of ['Welcome','VoiceGuide','Minimize','Close','Location','License','StandardMode','EnablePerformance','Cancel','Finish','Action','Retry','Launch']) {
+  const file = path.join(voiceDir, name + '.wav');
+  const wav = fs.readFileSync(file);
+  assert.equal(wav.toString('ascii', 8, 12), 'WAVE');
+  assert.equal(wav.readUInt32LE(40), wav.length - 44);
+  assert.ok(wav.subarray(44).some((byte) => byte !== 0));
+  args.push('/resource:'+file+',voice.'+name+'.wav');
+}
 args.push('/resource:'+payload+',payload.exe','/resource:'+hashFile+',payload.sha256',path.join(root,'installer/Setup.cs'));
 run(csc,args);const dest=path.join(dir,'Install With Spaces');run(exe,['--test-install',dest]);assert.equal(fs.readFileSync(path.join(dest,'TechBrowser02.exe'),'utf8'),'test fixture only');console.log('PASS wrapper extracts/verifies payload, handles spaced destination and detects installation success');
+run(exe,['--test-voice']);console.log('PASS bundled welcome starts, launch receives focus and speech, and the voice toggle stops playback');
 fs.writeFileSync(hashFile,'invalid');run(csc,args);const badDest=path.join(dir,'Must Not Install');const failed=spawnSync(exe,['--test-install',badDest],{timeout:30000});assert.equal(failed.status,3);assert.equal(fs.existsSync(badDest),false);console.log('PASS corrupt payload rejected before executing installer');
 
 const xaml=fs.readFileSync(path.join(root,'installer/Window.xaml'),'utf8');

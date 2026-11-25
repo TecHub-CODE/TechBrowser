@@ -2,6 +2,7 @@
 //  KEYBOARD SHORTCUTS
 // ══════════════════════════════════════════
 document.addEventListener('keydown', function (e) {
+  if (document.querySelector('#voiceSearch[open]')) return;
   var mod = e.metaKey || e.ctrlKey;
   if (mod && e.key === 't') {
     e.preventDefault();

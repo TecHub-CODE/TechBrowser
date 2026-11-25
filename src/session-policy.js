@@ -12,7 +12,7 @@ function browserSessions(session) {
   return [session.defaultSession, ...PARTITIONS.map((name) => session.fromPartition(name))];
 }
 
-function installPermissions(targetSession, getWindow, dialog, getSettings = () => ({})) {
+function installPermissions(targetSession, getWindow, dialog, getSettings = () => ({}), allowAppMicrophone = () => false) {
   const notificationOrigins = new Set();
   const ownClipboard = (contents, permission, url) => {
     const win = getWindow();
@@ -36,6 +36,8 @@ function installPermissions(targetSession, getWindow, dialog, getSettings = () =
   targetSession.setPermissionRequestHandler(
     async (contents, permission, callback, details = {}) => {
       if (ownClipboard(contents, permission, details.requestingUrl)) return callback(true);
+      if (permission === 'media' && contents && contents === getWindow()?.webContents)
+        return callback(allowAppMicrophone(contents, details));
       if (permission === 'notifications' && getSettings().notifications !== true)
         return callback(false);
       const labels = {

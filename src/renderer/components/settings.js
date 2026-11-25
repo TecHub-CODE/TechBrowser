@@ -94,7 +94,11 @@ function renderSettings() {
     '</div><div class="srinf"><div class="srlbl">Dikey Sekmeler</div><div class="srdesc">Sekmeleri sol kenara taşı</div></div><button class="tog ' +
     (cfg.verticalTabs ? 'on' : '') +
     '" data-action="vertical-tabs"></button></div>' +
-    '<div class="spsec">GİZLİLİK</div>' +
+    '<div class="spsec">ERİŞİLEBİLİRLİK</div><div class="srow"><div class="sric">' +
+    ico('gear') +
+    '</div><div class="srinf"><div class="srlbl" id="browserVoiceLabel">Sesli rehber</div><div class="srdesc">Tab ile odaklandığınız tarayıcı kontrollerini okuyun</div></div><input type="checkbox" data-setup-voice aria-labelledby="browserVoiceLabel" ' +
+    (localStorage.getItem('tb_setup_voice_off') !== '1' ? 'checked' : '') +
+    '></div><div class="spsec">GİZLİLİK</div>' +
     [
       [
         'shieldcheck',

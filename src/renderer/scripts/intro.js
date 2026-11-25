@@ -19,6 +19,7 @@ function skipIntro() {
       v.load();
     }
     overlay.remove();
+    window.refreshSetupVoice?.();
   }, duration);
   setTimeout(function () {
     document.body.classList.remove('studio-arriving');

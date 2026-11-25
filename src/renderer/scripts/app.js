@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (result && result.accepted) {
         var ov = document.getElementById('termsOverlay');
         if (ov) ov.remove();
+        window.refreshSetupVoice?.();
         return;
       }
     } catch (e) {
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Overlay'i göster
     var overlay = document.getElementById('termsOverlay');
     if (overlay) overlay.style.display = 'flex';
+    window.refreshSetupVoice?.();
 
     // Scroll dinle + fallback
     var _termsUnlocked = false;
@@ -87,6 +89,7 @@ async function acceptTerms() {
   ov.style.opacity = '0';
   setTimeout(function () {
     ov.remove();
+    window.refreshSetupVoice?.();
   }, 400);
 }
 

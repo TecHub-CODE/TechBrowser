@@ -15,6 +15,9 @@ fs.writeFileSync(
   }),
 );
 app.setPath('userData', profile);
+app.commandLine.appendSwitch('use-fake-device-for-media-stream');
+app.commandLine.appendSwitch('use-file-for-fake-audio-capture',
+  path.join(__dirname, '../installer/assets/voice/BrowserWelcome.wav'));
 require('../main');
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -27,6 +30,14 @@ app
     const run = (source) => window.webContents.executeJavaScript(source, true);
     await run('skipIntro()');
     await delay(1600);
+    assert.deepEqual(await run(`({
+      clip: new URL(document.getElementById('setupVoiceAudio').currentSrc).pathname.split('/').pop(),
+      playing: !document.getElementById('setupVoiceAudio').paused,
+      enabled: document.querySelector('#firstRunSetup [data-setup-voice]').checked
+    })`), { clip: 'BrowserWelcome.wav', playing: true, enabled: true });
+    await run("document.querySelector('#firstRunSetup [data-setup-voice]').click()");
+    assert.ok(await run("document.getElementById('setupVoiceAudio').paused"));
+    assert.ok(await run("[...document.querySelectorAll('[data-setup-voice]')].every(box => !box.checked)"));
     assert.deepEqual(
       await run(`({
         tabs: Array.from(document.querySelectorAll('.tab')).map(t => t.querySelector('.tab-title').textContent),
@@ -144,6 +155,45 @@ app
     assert.equal(saved.discoverySourceDetail, 'GitHub etkinliği');
     assert.equal(await run(`document.querySelectorAll('.first-run-page.active').length`), 0);
     assert.equal(await run(`Object.values(tabData).some(tab => tab.internal)`), false);
+    await run("openPanel('settings')");
+    assert.equal(await run("document.querySelector('#spBody [data-setup-voice]').checked"), false);
+    await run("document.querySelector('#spBody [data-setup-voice]').click(); closeSpanel()");
+    assert.equal(await run("localStorage.getItem('tb_setup_voice_off')"), '0');
+    await run("document.getElementById('addr').focus()");
+    assert.match(await run("document.getElementById('setupVoiceAudio').src"), /BrowserAddress\.wav$/);
+    if (await run("window.electronAPI.invoke('voice-search-status')")) {
+      await run("window.voiceTestNavigate = ''; doNavigate = (url) => { window.voiceTestNavigate = url; }; true");
+      await run("document.querySelector('[data-voice-search]').click()");
+      assert.ok(await run("document.getElementById('voiceSearch').getBoundingClientRect().width >= 600"));
+      assert.ok(await run(`(() => {
+        const box = document.getElementById('voiceSearch').getBoundingClientRect();
+        return Math.abs(box.left + box.width / 2 - innerWidth / 2) < 2 &&
+          Math.abs(box.top + box.height / 2 - innerHeight / 2) < 2;
+      })()`));
+      assert.ok(await run("document.querySelector('.voice-orb').getBoundingClientRect().width >= 180"));
+      let state;
+      let captured = false;
+      let thought = false;
+      for (let i = 0; i < 100; i++) {
+        state = await run("document.getElementById('voiceSearch').dataset.state");
+        if (state === 'processing') thought = true;
+        if (state === 'error' || await run("Boolean(window.voiceTestNavigate)")) break;
+        if (state === 'listening' && !captured) {
+          fs.writeFileSync(path.join(__dirname, 'results', 'voice-search.png'),
+            (await window.webContents.capturePage()).toPNG());
+          captured = true;
+        }
+        await delay(200);
+      }
+      assert.ok(thought, 'thinking state is shown while the query is decoded');
+      const destination = await run("window.voiceTestNavigate");
+      assert.ok(destination, await run("document.querySelector('.voice-status').textContent"));
+      assert.match(new URL(destination).searchParams.get('q'), /arama motoru|başlangıç|ayarları/i);
+      assert.equal(await run("document.getElementById('voiceSearch').open"), false);
+      await delay(50);
+      assert.equal(await run("document.querySelector('.voice-orb canvas')"), null);
+      console.log('PASS isolated microphone capture transcribes Turkish locally after onboarding');
+    }
     console.log(
       'PASS first install opens two internal tabs, applies preferences and stores survey locally',
     );

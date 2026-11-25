@@ -68,6 +68,7 @@ function showInternalFirstRunPage(url) {
   updateLockIcon(url);
   document.getElementById('btnBack').disabled = true;
   document.getElementById('btnFwd').disabled = true;
+  window.refreshSetupVoice?.();
   return true;
 }
 
@@ -240,6 +241,7 @@ function leaveFirstRunPages() {
     page.classList.remove('active');
   });
   firstRunActive = false;
+  window.refreshSetupVoice?.();
   document.getElementById('addr').readOnly = false;
   var remaining = document.querySelector('.tab');
   if (remaining) selectTab(remaining);

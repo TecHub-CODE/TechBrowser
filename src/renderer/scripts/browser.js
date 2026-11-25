@@ -596,6 +596,7 @@ function doNavigate(raw) {
 
 function showNewTab() {
   document.querySelectorAll('.first-run-page').forEach((page) => page.classList.remove('active'));
+  window.refreshSetupVoice?.();
   document.getElementById('newtab').classList.remove('hidden');
   document.getElementById('addr').value = 'techbrowser://newtab';
   document.getElementById('addr').readOnly = false;
@@ -605,6 +606,7 @@ function showNewTab() {
 function hideNewTab() {
   document.getElementById('newtab').classList.add('hidden');
   document.querySelectorAll('.first-run-page').forEach((page) => page.classList.remove('active'));
+  window.refreshSetupVoice?.();
   var c = document.getElementById('wvc-' + activeTabId);
   if (c) c.classList.add('active');
 }

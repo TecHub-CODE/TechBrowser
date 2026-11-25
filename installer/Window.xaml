@@ -10,9 +10,14 @@
  <Grid>
   <Grid.RowDefinitions><RowDefinition Height="64"/><RowDefinition Height="*"/></Grid.RowDefinitions>
   <Border Background="#0F1217" BorderBrush="#292F38" BorderThickness="0,0,0,1">
-   <Grid Margin="24,0,14,0">
+   <Grid Margin="24,0,14,0" KeyboardNavigation.TabNavigation="Continue">
     <StackPanel Orientation="Horizontal" VerticalAlignment="Center"><Image x:Name="HeaderLogo" Width="25" Height="25" Stretch="Uniform"/><TextBlock Text="TechBrowser" Margin="11,0,0,0" VerticalAlignment="Center" FontFamily="Segoe UI Variable Display, Segoe UI" FontSize="15" FontWeight="SemiBold"/></StackPanel>
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"><Button x:Name="Minimize" Style="{StaticResource ChromeButton}" Content="─" FontSize="15"/><Button x:Name="Close" Style="{StaticResource ChromeButton}" Content="✕" FontSize="14"/></StackPanel>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+     <TextBlock x:Name="VoiceStatus" Visibility="Collapsed" VerticalAlignment="Center" Foreground="#C7CED8" FontSize="12" Margin="0,0,12,0"/>
+     <CheckBox x:Name="VoiceGuide" Content="Sesli rehber" IsChecked="True" Foreground="#F4F6F8" FontSize="14" VerticalAlignment="Center" Margin="0,0,18,0" Visibility="Collapsed"/>
+     <Button x:Name="Minimize" AutomationProperties.Name="Pencereyi küçült" Style="{StaticResource ChromeButton}" Content="─" FontSize="15"/>
+     <Button x:Name="Close" AutomationProperties.Name="Kurulum penceresini kapat" Style="{StaticResource ChromeButton}" Content="✕" FontSize="14"/>
+    </StackPanel>
    </Grid>
   </Border>
   <Grid Grid.Row="1">

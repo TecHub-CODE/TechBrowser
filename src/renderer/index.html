@@ -634,6 +634,7 @@
           <p class="terms-sub" id="terms-sub">
             Kullanım koşulları ve verileriniz hakkında bilmeniz gerekenler.
           </p>
+          <label class="setup-voice-toggle"><input type="checkbox" data-setup-voice checked /> Sesli rehber</label>
           <div id="terms-update-badge" data-layout="static-2">
             Koşullar güncellendi. Devam etmeden önce değişiklikleri okuyun.
           </div>
@@ -839,6 +840,7 @@
             data-ui="ui-16"
           />
           <span class="se-badge" id="seBadge" title="Arama motoru" data-ui="ui-17">G</span>
+          <button class="voice-search-button" type="button" data-voice-search aria-label="Sesli ara" title="Sesli ara" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
           <div class="suggestions" id="suggestions"></div>
         </div>
         <button class="btn" title="Yer imi ekle (Ctrl+D)" data-ui="ui-18">
@@ -1017,6 +1019,7 @@
                 autocomplete="off"
                 data-ui="ui-39"
               />
+              <button class="voice-search-button" type="button" data-voice-search aria-label="Sesli ara" title="Sesli ara" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
               <button class="nt-btn" data-ui="ui-40">Ara</button>
             </div>
             <div class="spell-hint" id="ntSpellHint" hidden aria-live="polite">
@@ -1119,6 +1122,7 @@
                 <p>
                   Birkaç temel tercih yapın. Hepsini daha sonra Ayarlar’dan değiştirebilirsiniz.
                 </p>
+                <label class="setup-voice-toggle"><input type="checkbox" data-setup-voice checked /> Sesli rehber</label>
               </div>
             </div>
             <div class="first-run-section">
@@ -1269,6 +1273,7 @@
             </div>
             <div class="survey-heading">
               <h1 id="firstRunSurveyTitle">Bizi nereden duydunuz?</h1>
+              <label class="setup-voice-toggle"><input type="checkbox" data-setup-voice checked /> Sesli rehber</label>
               <p>Yanıtınız TechBrowser’ı doğru yerde geliştirmemize yardımcı olur.</p>
             </div>
             <div class="survey-grid" id="firstRunSources">
@@ -1793,6 +1798,9 @@
     <script src="components/notes.js"></script>
     <script src="scripts/interface.js"></script>
     <script src="scripts/onboarding.js"></script>
+    <script src="scripts/setup-voice.js"></script>
+    <script src="components/voice-orb.js"></script>
+    <script src="scripts/voice-search.js"></script>
     <script src="scripts/ai.js"></script>
     <script src="components/misket-chat.js"></script>
     <link rel="stylesheet" href="styles/misket-chat.css" />

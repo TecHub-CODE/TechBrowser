@@ -61,6 +61,15 @@ uninstallArgs.push(path.join(root, 'installer/Uninstall.cs'));
 run(csc, uninstallArgs);
 
 if (!visualOnly) {
+  const voiceSearch = path.join(generated, 'voice-search');
+  if (!win81 && (!fs.existsSync(path.join(voiceSearch, 'model-base.bin')) ||
+      !fs.existsSync(path.join(voiceSearch, 'Release', 'whisper-cli.exe')) ||
+      !fs.existsSync(path.join(voiceSearch, 'LICENSE')))) {
+    const script = fs.readFileSync(path.join(__dirname, 'prepare-voice-search.ps1'), 'utf8');
+    const command = "& {\n" + script + "\n} '" + voiceSearch.replace(/'/g, "''") + "'";
+    const powershell = path.join(process.env.WINDIR, 'System32/WindowsPowerShell/v1.0/powershell.exe');
+    run(powershell, ['-NoProfile', '-NonInteractive', '-EncodedCommand', Buffer.from(command, 'utf16le').toString('base64')]);
+  }
   const coreArtifact = win81
     ? 'TechBrowser-Core-${version}-Win81.exe'
     : 'TechBrowser-Core-${version}.exe';
@@ -98,6 +107,9 @@ const target = path.join(
 );
 const setupArgs = [...commonCompilerArgs, '/out:' + target];
 resources(setupArgs);
+const voiceDir = path.join(root, 'installer/assets/voice');
+for (const file of fs.readdirSync(voiceDir).filter((name) => name.endsWith('.wav') && !name.startsWith('Browser')))
+  setupArgs.push('/resource:' + path.join(voiceDir, file) + ',voice.' + file);
 setupArgs.push(
   '/resource:' + path.join(root, 'installer/assets/setupintro-frames.zip') + ',setupintro-frames.zip',
 );

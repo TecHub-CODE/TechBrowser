@@ -6,6 +6,11 @@ const { installRuntimeCompat } = require('./src/runtime-compat');
 installRuntimeCompat();
 const { browserSessions, installPermissions, setBrowserProxy } = require('./src/session-policy');
 const { importBrowserData } = require('./src/browser-import');
+const voiceAssist = require('./src/voice-assist').createVoiceAssist(
+  path.join(app.isPackaged ? path.join(process.resourcesPath, 'app.asar.unpacked') : __dirname,
+    'installer', 'generated', 'voice-search'),
+);
+let microphoneArmedUntil = 0;
 
 const PERFORMANCE_MODE_PATH = path.join(app.getPath('userData'), 'performance-mode.json');
 function readPerformanceMode() {
@@ -199,6 +204,14 @@ ipcMain.handle = (channel, handler) =>
       throw new Error('Yetkisiz uygulama isteği.');
     return handler(event, ...args);
   });
+ipcMain.handle('voice-search-arm', () => {
+  if (!voiceAssist.available() || !mainWindow.isFocused()) return false;
+  microphoneArmedUntil = Date.now() + 15000;
+  return true;
+});
+ipcMain.handle('voice-search-transcribe', (_, bytes) => voiceAssist.transcribe(bytes));
+ipcMain.handle('voice-search-status', () => voiceAssist.available());
+ipcMain.handle('voice-read', (_, label) => voiceAssist.speak(label));
 const originalOn = ipcMain.on.bind(ipcMain);
 ipcMain.on = (channel, handler) =>
   originalOn(channel, (event, ...args) => {
@@ -230,7 +243,7 @@ function createWindow() {
       sandbox: true, // Guest pages remain isolated from Node.js.
       // 🔒 YENİ: ek güvenlik
       navigateOnDragDrop: false,
-      autoplayPolicy: 'user-gesture-required', // intro videosu sesli otomatik oynasın
+      autoplayPolicy: 'no-user-gesture-required', // Local first-run accessibility announcements.
     },
     icon: path.join(__dirname, 'assets', 'icon.ico'),
     show: false,
@@ -244,6 +257,7 @@ function createWindow() {
     prefs.sandbox = true;
     prefs.webSecurity = true;
     prefs.allowRunningInsecureContent = false;
+    prefs.autoplayPolicy = 'user-gesture-required';
     if (!/^https?:\/\//i.test(params.src || '')) event.preventDefault();
   });
   mainWindow.webContents.on('did-attach-webview', (_, guest) => {
@@ -425,6 +439,13 @@ app.whenReady().then(async () => {
       () => mainWindow,
       dialog,
       () => siteSettings,
+      (contents, details) => {
+        if (s !== session.defaultSession || contents !== mainWindow?.webContents ||
+            !mainWindow.isFocused() || Date.now() >= microphoneArmedUntil ||
+            details.mediaTypes?.length !== 1 || details.mediaTypes[0] !== 'audio') return false;
+        microphoneArmedUntil = 0;
+        return true;
+      },
     ),
   );
 

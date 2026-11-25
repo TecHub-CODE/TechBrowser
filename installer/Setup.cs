@@ -6,9 +6,11 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using System.Media;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -61,12 +63,16 @@ public class Setup : Window {
  readonly string[] mottos={"Kendi alanınız. Kendi tarayıcınız.","Daha sakin. Daha size ait.","Web, sizin ritminizde."};
  int mottoIndex;
  FrameworkElement ui; bool busy, done, preview, choosingPerformance; HardwareProfile pendingHardware; string destination, temp;
+ SoundPlayer narrator;
+ CheckBox voiceGuide;
+ DispatcherTimer voiceDelay;
+ bool welcoming;
  T Find<T>(string name) where T:class { return ui.FindName(name) as T; }
  static Stream Resource(string name) { return Assembly.GetExecutingAssembly().GetManifestResourceStream(name); }
  static string Read(string name) { using(var s=Resource(name)) using(var r=new StreamReader(s)) return r.ReadToEnd(); }
  void Text(string name,string value) { Find<TextBlock>(name).Text=value; }
  void Picture(string name,string resource) { using(var stream=Resource(resource)){var b=new BitmapImage();b.BeginInit();b.CacheOption=BitmapCacheOption.OnLoad;b.StreamSource=stream;b.EndInit();b.Freeze();Find<Image>(name).Source=b;} }
- public Setup(bool isPreview) {
+ public Setup(bool isPreview, bool enableVoiceGuide) {
   preview=isPreview; Width=1040;Height=650;ResizeMode=ResizeMode.NoResize;WindowStyle=WindowStyle.None;AllowsTransparency=true;Background=Brushes.Transparent;WindowStartupLocation=WindowStartupLocation.CenterScreen;Title="TechBrowser Kurulumu";
   ui=(FrameworkElement)XamlReader.Parse(Read("window.xaml"));Content=ui;
   Picture("Art","glass.png");
@@ -82,6 +88,97 @@ public class Setup : Window {
   Find<Button>("License").Click+=(s,e)=>{var w=new Window{Title="TechBrowser — Lisans koşulları",Owner=this,Width=700,Height=500,Background=new SolidColorBrush(Color.FromRgb(19,22,27)),WindowStartupLocation=WindowStartupLocation.CenterOwner};w.Content=new TextBox{Text=Read("license.txt"),IsReadOnly=true,TextWrapping=TextWrapping.Wrap,VerticalScrollBarVisibility=ScrollBarVisibility.Auto,Padding=new Thickness(24),FontFamily=new FontFamily("Segoe UI"),FontSize=14,Foreground=new SolidColorBrush(Color.FromRgb(245,246,248)),Background=new SolidColorBrush(Color.FromRgb(19,22,27)),BorderThickness=new Thickness(0)};w.ShowDialog();};
   Find<Button>("Action").Click+=async(s,e)=>{if(done){try{Process.Start(new ProcessStartInfo(Path.Combine(destination,"TechBrowser02.exe")){UseShellExecute=true});Close();}catch(Exception ex){Text("Hint","Tarayıcı açılamadı: "+ex.Message);}return;}if(!preview)await Install();};
   Loaded+=(s,e)=>{ui.BeginAnimation(OpacityProperty,new DoubleAnimation(0,1,TimeSpan.FromMilliseconds(300)));if(preview && Array.IndexOf(Environment.GetCommandLineArgs(),"--ready")<0){Text("Heading","TechBrowser hazırlanıyor");Text("Subtitle","Gerekli dosyalar kuruluyor. Bu işlem genellikle birkaç saniye sürer.");Text("Status","Kurulum devam ediyor");Text("Percent","68%");Find<ProgressBar>("Progress").Value=68;Text("Hint","Önizleme — bilgisayarınıza kurulum yapılmaz.");Text("Step1","01  Tamamlandı");Text("Step2","02  Kuruluyor");Find<StackPanel>("Options").Visibility=Visibility.Collapsed;Find<Button>("Action").Visibility=Visibility.Collapsed;}};
+  if(enableVoiceGuide) ContentRendered+=(s,e)=>StartVoiceGuide();
+ }
+ void StartVoiceGuide() {
+  if(voiceGuide!=null)return;
+  voiceGuide=Find<CheckBox>("VoiceGuide");
+  voiceGuide.Visibility=Visibility.Visible;
+  var focusTemplate=new ControlTemplate(typeof(Control));
+  var outline=new FrameworkElementFactory(typeof(Border));
+  outline.SetValue(Border.BorderBrushProperty,Brushes.White);
+  outline.SetValue(Border.BorderThicknessProperty,new Thickness(2));
+  outline.SetValue(Border.MarginProperty,new Thickness(-3));
+  outline.SetValue(Border.CornerRadiusProperty,new CornerRadius(5));
+  focusTemplate.VisualTree=outline;
+  var focusStyle=new Style(typeof(Control));
+  focusStyle.Setters.Add(new Setter(Control.TemplateProperty,focusTemplate));
+  foreach(var name in new[]{"VoiceGuide","Minimize","Close","Location","License","StandardMode","EnablePerformance","Cancel","Action"})
+   Find<Control>(name).FocusVisualStyle=focusStyle;
+  voiceDelay=new DispatcherTimer { Interval=TimeSpan.FromSeconds(1) };
+  voiceDelay.Tick+=(s,e)=>{voiceDelay.Stop();welcoming=false;FocusAndRead(choosingPerformance?"StandardMode":"Action",true);};
+  voiceGuide.Checked+=(s,e)=>ReadFocusedControl();
+  voiceGuide.Unchecked+=(s,e)=>StopReading();
+  GotKeyboardFocus+=(s,e)=>ReadFocusedControl();
+  Activated+=(s,e)=>FocusAndRead(choosingPerformance?"StandardMode":"Action",true);
+  Deactivated+=(s,e)=>StopReading();
+  Closed+=(s,e)=>StopReading();
+
+  try {
+   welcoming=true;
+   Find<Button>(choosingPerformance?"StandardMode":"Action").Focus();
+   voiceDelay.Interval=PlayVoice("Welcome")+TimeSpan.FromSeconds(1);
+   voiceDelay.Start();
+  }catch{VoiceUnavailable("Sesli rehber başlatılamadı.");}
+ }
+ TimeSpan PlayVoice(string clip) {
+  StopPlayback();
+  var stream=Resource("voice."+clip+".wav");
+  if(stream==null)throw new InvalidDataException("Ses kaydı bulunamadı: "+clip);
+  narrator=new SoundPlayer(stream);
+  // The generated WAV files use a 44-byte PCM header.
+  double seconds;
+  using(var reader=new BinaryReader(stream,System.Text.Encoding.UTF8,true)){
+   stream.Position=28;
+   seconds=(stream.Length-44)/(double)reader.ReadUInt32();
+  }
+  stream.Position=0;
+  narrator.Load();
+  narrator.Play();
+  return TimeSpan.FromSeconds(seconds);
+ }
+ void StopPlayback() {
+  if(narrator==null)return;
+  narrator.Stop();
+  narrator.Stream.Dispose();
+  narrator.Dispose();
+  narrator=null;
+ }
+ void VoiceUnavailable(string message) {
+  StopReading();
+  voiceGuide.IsChecked=false;
+  voiceGuide.IsEnabled=false;
+  Text("VoiceStatus",message);
+  Find<TextBlock>("VoiceStatus").Visibility=Visibility.Visible;
+  System.Windows.Automation.AutomationProperties.SetHelpText(voiceGuide,message);
+ }
+ void StopReading() {
+  voiceDelay.Stop();
+  welcoming=false;
+  StopPlayback();
+ }
+ void FocusAndRead(string name,bool keepCurrentFocus=false) {
+  if(voiceGuide==null || voiceGuide.IsChecked!=true || welcoming || !IsActive)return;
+  var target=Find<Control>(name);
+  if((!keepCurrentFocus || !IsKeyboardFocusWithin) && target.IsEnabled && target.IsVisible){
+   if(!target.IsKeyboardFocused && target.Focus())return; // The focus handler reads it.
+  }
+  ReadFocusedControl();
+ }
+ void ReadFocusedControl() {
+  if(voiceGuide.IsChecked!=true || !IsActive || welcoming)return;
+  var control=Keyboard.FocusedElement as Control;
+  if(control==null || !IsKeyboardFocusWithin)return;
+  string clip=control.Name;
+  switch(clip){
+   case "Action": clip=done?"Launch":Equals(((Button)control).Content,"Tekrar dene")?"Retry":"Action";break;
+   case "Cancel": if(done)clip="Finish";break;
+   case "VoiceGuide":case "Minimize":case "Close":case "Location":case "License":case "StandardMode":case "EnablePerformance":break;
+   default:return;
+  }
+  try {
+   PlayVoice(clip);
+  }catch{VoiceUnavailable("Ses çıkışı kullanılamıyor.");}
  }
  public void ShowHardwareRecommendation(HardwareProfile profile) {
   if(profile==null||!profile.RecommendPerformance)return;pendingHardware=profile;choosingPerformance=true;
@@ -93,6 +190,7 @@ public class Setup : Window {
   if(!choosingPerformance)return;choosingPerformance=false;try{pendingHardware.SavePerformanceMode(enabled);}catch{}
   Text("Heading","Başlamaya hazırsınız.");Text("Subtitle","TechHub ailesine hoş geldiniz. Kurulum yalnızca birkaç saniye sürecek.");Text("FooterNote","Güvenli kurulum");
   Find<Border>("InstallCard").Visibility=Visibility.Visible;Find<StackPanel>("PerformanceStep").Visibility=Visibility.Collapsed;Find<StackPanel>("Options").Visibility=Visibility.Visible;Find<StackPanel>("DefaultActions").Visibility=Visibility.Visible;Find<StackPanel>("PerformanceActions").Visibility=Visibility.Collapsed;
+  FocusAndRead("Action");
  }
  async Task Install() {
   busy=true;Find<Button>("Action").IsEnabled=false;Find<Button>("Cancel").IsEnabled=false;Find<StackPanel>("Options").Visibility=Visibility.Collapsed;
@@ -107,16 +205,32 @@ public class Setup : Window {
    if(!File.Exists(Path.Combine(destination,"TechBrowser02.exe")))throw new IOException("Kurulum sonucu doğrulanamadı.");
    Find<ProgressBar>("Progress").IsIndeterminate=false;Find<ProgressBar>("Progress").Value=100;Text("Percent","100%");Text("Heading","Hoş geldiniz");Text("Subtitle","TechBrowser hazır. İyi keşifler.");Text("Status","Kurulum tamamlandı");Text("Hint","TechBrowser'ı şimdi açabilirsiniz.");Text("Step2","02  Tamamlandı");Text("Step3","03  Hazır");Find<Button>("Action").Content="TechBrowser'ı aç";Find<Button>("Cancel").Content="Kapat";done=true;
   }catch(Exception ex){Find<ProgressBar>("Progress").IsIndeterminate=false;Text("Heading","Kurulum tamamlanamadı.");Text("Status","Tekrar deneyebilirsiniz");Text("Percent","");Text("Hint",ex.Message);Find<Button>("Action").Content="Tekrar dene";Find<StackPanel>("Options").Visibility=Visibility.Visible;}
-  finally {busy=false;Find<Button>("Action").IsEnabled=true;Find<Button>("Cancel").IsEnabled=true;if(temp!=null){try{Directory.Delete(temp,true);}catch{}}}
+  finally {busy=false;Find<Button>("Action").IsEnabled=true;Find<Button>("Cancel").IsEnabled=true;if(temp!=null){try{Directory.Delete(temp,true);}catch{}}FocusAndRead("Action");}
  }
  [STAThread] public static void Main(string[] args) {
-  var app=new Application();bool hardwarePreview=Array.IndexOf(args,"--preview-hardware")>=0;bool previewMode=Array.IndexOf(args,"--preview")>=0||Array.IndexOf(args,"--capture")>=0||hardwarePreview;var w=new Setup(previewMode);
+  var app=new Application();bool hardwarePreview=Array.IndexOf(args,"--preview-hardware")>=0;bool previewMode=Array.IndexOf(args,"--preview")>=0||Array.IndexOf(args,"--capture")>=0||hardwarePreview;
+  bool automated=previewMode||Array.IndexOf(args,"--test-install")>=0;
+  var w=new Setup(previewMode,!automated||Array.IndexOf(args,"--preview-voice")>=0);
   if(hardwarePreview)w.Loaded+=(s,e)=>w.ShowHardwareRecommendation(HardwareProfile.SimulatedLowEnd());
 #if TESTING
   if(args.Length==2&&args[0]=="--test-install") {w.destination=args[1];w.Loaded+=async(s,e)=>{await w.Install();app.Shutdown(w.done?0:3);};}
+  if(Array.IndexOf(args,"--test-voice")>=0) {
+   w.ContentRendered+=(s,e)=>{
+    w.StartVoiceGuide();
+    bool started=w.welcoming && w.voiceDelay.IsEnabled && w.voiceDelay.Interval.TotalSeconds>1;
+    w.StopReading();
+    w.done=true;
+    w.FocusAndRead("Action");
+    bool launchRead=w.Find<Button>("Action").IsKeyboardFocused && w.narrator!=null &&
+     w.narrator.Stream.Length==Resource("voice.Launch.wav").Length;
+    w.voiceGuide.IsChecked=false;
+    bool stopped=!w.welcoming && !w.voiceDelay.IsEnabled && w.narrator==null;
+    app.Shutdown(started && launchRead && stopped?0:4);
+   };
+   app.Run(w);return;
+  }
 #endif
   int capture=Array.IndexOf(args,"--capture");if(capture>=0&&capture+1<args.Length){w.Loaded+=(s,e)=>{var timer=new DispatcherTimer{Interval=TimeSpan.FromSeconds(1)};timer.Tick+=(ss,ee)=>{timer.Stop();var bitmap=new RenderTargetBitmap((int)w.Width,(int)w.Height,96,96,PixelFormats.Pbgra32);bitmap.Render(w.ui);var encoder=new PngBitmapEncoder();encoder.Frames.Add(BitmapFrame.Create(bitmap));using(var f=File.Create(args[capture+1]))encoder.Save(f);w.Close();};timer.Start();};}
-  bool automated=previewMode||Array.IndexOf(args,"--test-install")>=0;
   if(automated){app.Run(w);return;}
   app.ShutdownMode=ShutdownMode.OnExplicitShutdown;var intro=new SetupIntro();bool testLow=Array.IndexOf(args,"--test-low-hardware")>=0;var hardwareTask=Task.Run(()=>testLow?HardwareProfile.SimulatedLowEnd():HardwareProfile.Detect());
   intro.Completed+=()=>{try{var hardware=hardwareTask.GetAwaiter().GetResult();w.ShowHardwareRecommendation(hardware);}catch(Exception ex){if(testLow){try{File.WriteAllText(Path.Combine(Path.GetTempPath(),"TechBrowser-HardwarePrompt-error.txt"),ex.ToString());}catch{}}}app.MainWindow=w;w.Show();app.ShutdownMode=ShutdownMode.OnLastWindowClose;intro.Close();};intro.Show();app.Run();
